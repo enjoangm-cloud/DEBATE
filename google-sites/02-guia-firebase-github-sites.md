@@ -44,4 +44,4 @@ Tiempo total: unos 20 minutos. Usad **la misma cuenta de Google** en todos los p
 
 ## G. Cuando todo funcione
 - Avisad a Claude con el **ID del proyecto** y la **URL del Site**: actualizará los textos y quitará Vercel.
-- En https://vercel.com, proyecto `debateideathonm` → Settings → **Delete Project**.
+- En https://vercel.com, proyecto `temporadaruralideathon` → Settings → **Delete Project**.

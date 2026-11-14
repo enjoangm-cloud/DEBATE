@@ -55,7 +55,7 @@ Sin build ni dependencias. Probar en local: `cd app && python3 -m http.server 80
 - Ninguna clave de API en el código. Ver `docs/seguridad.md`.
 
 ## Publicación
-- **Ahora: Vercel** (`vercel.json`) → https://debateideathonm.vercel.app. Cada push a `main` se publica solo.
+- **Ahora: Vercel** (`vercel.json`) → https://temporadaruralideathon.vercel.app. Cada push a `main` se publica solo.
 - **Google Site** = portada del proyecto con la demo incrustada ("Insertar → URL") y el QR. Solo Google Sites puede incrustarla.
 - **Firebase: en pausa.** `firebase.json` y la Action (solo manual) están listos; se activará si sobra tiempo
   (guía en `google-sites/02-guia-firebase-github-sites.md`).
