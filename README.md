@@ -32,6 +32,7 @@ cd app && python3 -m http.server 8000
 ```
 
 ## Publicar
-Vercel lee `vercel.json` y publica la carpeta `app/`. Cada `git push` actualiza la demo.
+Firebase Hosting (Google) publica la carpeta `app/` con `firebase.json`. Cada `git push` a `main` lanza la
+GitHub Action, que pasa las pruebas y publica. La demo se incrusta en el Google Site del proyecto.
 
 Más detalle: `docs/idea.md` (problemas, soluciones y Business Model Canvas) y `docs/contrato-api.md`.

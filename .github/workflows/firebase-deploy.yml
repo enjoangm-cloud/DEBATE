@@ -1,0 +1,49 @@
+# Publica la demo en Firebase Hosting (Google) cada vez que se sube un cambio a main.
+# Antes de publicar ejecuta las pruebas: si algo falla, NO se publica.
+# Necesita un secreto en GitHub: FIREBASE_SERVICE_ACCOUNT (el JSON de la cuenta de servicio).
+# El ID del proyecto se lee de ese mismo JSON, así que no hay que escribirlo en ningún sitio.
+name: Publicar en Firebase
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+concurrency:
+  group: firebase-deploy
+  cancel-in-progress: true
+
+jobs:
+  pruebas-y-publicar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Pruebas del backend y de las pantallas
+        run: |
+          node scripts/probar-backend.mjs
+          node scripts/probar-pantallas.mjs
+
+      - name: Leer el ID del proyecto de Firebase
+        id: proyecto
+        env:
+          SA: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+        run: |
+          if [ -z "$SA" ]; then echo "Falta el secreto FIREBASE_SERVICE_ACCOUNT" >&2; exit 1; fi
+          ID=$(printf '%s' "$SA" | jq -r .project_id)
+          if [ -z "$ID" ] || [ "$ID" = "null" ]; then echo "El secreto no es un JSON de cuenta de servicio válido" >&2; exit 1; fi
+          echo "id=$ID" >> "$GITHUB_OUTPUT"
+
+      - name: Publicar
+        uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+          projectId: ${{ steps.proyecto.outputs.id }}
+          channelId: live
