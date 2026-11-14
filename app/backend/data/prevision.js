@@ -1,5 +1,5 @@
 // Previsión simulada de 10 días desde HOY (noviembre en el Camp de Tarragona). Determinista.
-// aptoCosecha se calcula en services/weather.js a partir de lluvia y viento.
+// Lluvia mar 17 y mié 18, mestral vie 20. aptoCosecha se calcula en services/weather.js.
 export const PREVISION_BASE = [
   { fecha: '2026-11-14', tMax: 18, tMin: 8, lluviaProb: 5, lluviaMm: 0, vientoKmh: 10, cielo: 'sol' },
   { fecha: '2026-11-15', tMax: 17, tMin: 7, lluviaProb: 10, lluviaMm: 0, vientoKmh: 12, cielo: 'nubes' },
@@ -12,3 +12,6 @@ export const PREVISION_BASE = [
   { fecha: '2026-11-22', tMax: 18, tMin: 6, lluviaProb: 5, lluviaMm: 0, vientoKmh: 12, cielo: 'niebla' },
   { fecha: '2026-11-23', tMax: 19, tMin: 7, lluviaProb: 10, lluviaMm: 0, vientoKmh: 10, cielo: 'sol' }
 ];
+
+// Pequeña variación de temperatura por pueblo (°C). Lluvia y viento iguales en toda la red.
+export const AJUSTE_TEMPERATURA = { 'vila-rodona': 0, aiguamurcia: -1, montferri: 1, brafim: 0, vilabella: 1 };

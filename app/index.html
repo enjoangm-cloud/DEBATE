@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>DEBATE · Campaña de cosecha en Vila-rodona (demo)</title>
-  <meta name="description" content="Prototipo: organizar la campaña de cosecha en un pueblo de menos de 5.000 habitantes con Google Maps, Business Profile, Weather y Vertex AI.">
+  <title>DEBATE · Red de pueblos del Gaià (demo)</title>
+  <meta name="description" content="Prototipo: trabajo de temporada todo el año en una red de pueblos de menos de 5.000 habitantes con Google Maps, Business Profile, Weather y Vertex AI.">
   <meta name="referrer" content="strict-origin-when-cross-origin">
   <!-- Todo se sirve desde nuestro dominio (sin CDNs): Leaflet y la fuente están en frontend/vendor/.
        Mapa del prototipo: Leaflet + OpenStreetMap. En producción: Google Maps JavaScript API. -->
@@ -17,11 +17,15 @@
     <div class="marca">
       <span class="logo" aria-hidden="true">🍇</span>
       <div>
-        <h1 data-t="titulo_app">Campaña Vila-rodona</h1>
-        <p class="sub" data-t="subtitulo_app">La cosecha del pueblo, organizada</p>
+        <h1 data-t="titulo_app">Temporada del Gaià</h1>
+        <p class="sub" data-t="subtitulo_app">Trabajo de temporada todo el año en 5 pueblos que se ayudan</p>
       </div>
     </div>
     <div class="controles">
+      <label class="ctrl">
+        <span data-t="pueblo">Pueblo</span>
+        <select id="sel-pueblo" aria-label="Pueblo"></select>
+      </label>
       <label class="ctrl">
         <span data-t="idioma">Idioma</span>
         <select id="sel-idioma" aria-label="Idioma"></select>
@@ -34,15 +38,16 @@
     </div>
   </header>
 
-  <div class="aviso-demo">🧪 <span data-t="datos_simulados">Prototipo con datos simulados</span> · Vila-rodona (Alt Camp) · <span id="fecha-hoy"></span></div>
+  <div class="aviso-demo">🧪 <span data-t="datos_simulados">Prototipo con datos simulados</span> · Alt Camp (Tarragona) · <span id="fecha-hoy"></span></div>
 
   <nav class="nav" id="nav" aria-label="Secciones">
     <a href="#inicio"     data-t="nav_inicio">Inicio</a>
     <a href="#calendario" data-t="nav_calendario">Calendario</a>
     <a href="#mapa"       data-t="nav_mapa">Mapa</a>
     <a href="#trabajo"    data-t="nav_trabajo">Trabajo</a>
-    <a href="#pueblo"     data-t="nav_pueblo">Pueblo</a>
-    <a href="#comprar"    data-t="nav_comprar">Comprar</a>
+    <a href="#red"        data-t="nav_red">Red</a>
+    <a href="#turismo"    data-t="nav_turismo">Turismo</a>
+    <a href="#pueblo"     data-t="nav_pueblo">Gestión</a>
     <a href="#tramites"   data-t="nav_tramites">Trámites</a>
   </nav>
 

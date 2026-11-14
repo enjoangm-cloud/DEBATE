@@ -1,21 +1,24 @@
-// Mapa del pueblo: alojamiento, fincas, comercios, recogida y rutas (Google Maps en producción)
-import { getPueblo, getLugares, getRutas } from '../../../backend/api.js';
-import { t, esc, fuente, ICONO_LUGAR } from '../util.js';
+// Mapa de la red: viviendas de empleadores, empleadores, comercios, recogida, patrimonio y rutas
+import { getRed, getLugares, getRutas, getPueblo } from '../../../backend/api.js';
+import { t, esc, fuente, ICONO_LUGAR, euros, filtroPueblo, nombrePueblo, colorSeguro } from '../util.js';
 
 const TIPOS = [
-  ['alojamiento', 'Dónde dormir'], ['finca', 'Fincas'], ['comercio', 'Comercios'],
-  ['recogida', 'Puntos de recogida'], ['servicio', 'Servicios'],
+  ['alojamiento', 'Viviendas de empleadores'], ['empleador', 'Empleadores'], ['comercio', 'Comercios'],
+  ['recogida', 'Puntos de recogida'], ['servicio', 'Servicios'], ['patrimonio', 'Patrimonio'],
 ];
 
 let mapa = null; // instancia de Leaflet (se recrea en cada visita)
 
 // Texto del globo de cada lugar según su tipo
-function popup(l) {
-  let extra = '';
-  if (l.tipo === 'alojamiento') extra = `<br>🛏️ <strong>${l.plazasLibres}</strong> ${esc(t('plazas_libres', 'plazas libres'))} de ${l.plazas}${l.precioNoche ? ` · ${l.precioNoche} €/noche` : ' · gratis'}<br><span>Cede: ${esc(l.cedidoPor || '')}</span>`;
-  if (l.tipo === 'comercio') extra = `<br>🕐 Campaña: <strong>${esc(l.horarioCampana)}</strong>${l.ofertaTemporero ? `<br>🎁 ${esc(l.ofertaTemporero)}` : ''}`;
-  if (l.tipo === 'recogida') extra = `<br>🚐 Salida: <strong>${esc(l.hora || '')}</strong>`;
-  const ir = `https://www.google.com/maps/dir/?api=1&destination=${l.lat},${l.lng}`;
+function popup(l, pueblos) {
+  let extra = `<br><span>📍 ${esc(nombrePueblo(pueblos, l.puebloId))}</span>`;
+  if (l.tipo === 'alojamiento') extra += `<br>🛏️ <strong>${esc(l.plazasLibres)}</strong> ${esc(t('plazas_libres', 'plazas libres'))} de ${esc(l.plazas)}
+    <br>${l.verificado ? '✅ ' + esc(t('verificado', 'Verificada')) : '⏳ ' + esc(t('pendiente_verificar', 'Pendiente de verificar'))}
+    · ${esc(t('coste_temporero', 'Coste temporero'))}: ${euros(l.costeTemporero ?? 0)}`;
+  if (l.tipo === 'comercio') extra += `<br>🕐 Temporada: <strong>${esc(l.horarioCampana)}</strong>${l.ofertaTemporero ? `<br>🎁 ${esc(l.ofertaTemporero)}` : ''}`;
+  if (l.tipo === 'recogida') extra += `<br>🚐 Salida: <strong>${esc(l.hora || '')}</strong>`;
+  const lat = Number(l.lat), lng = Number(l.lng);
+  const ir = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`;
   return `<strong>${ICONO_LUGAR[l.tipo] || '📍'} ${esc(l.nombre)}</strong><br>${esc(l.descripcion || '')}${extra}
     <br><a href="${esc(ir)}" target="_blank" rel="noopener noreferrer">${esc(t('como_llegar', 'Cómo llegar'))} ↗</a>`;
 }
@@ -23,37 +26,45 @@ function popup(l) {
 export default {
   async html() {
     return `
-      <h2>🗺️ ${esc(t('nav_mapa', 'Mapa del pueblo'))}</h2>
-      <p class="muted">Todo lo que necesita un temporero al llegar, en un mapa. Toca un punto para ver detalles.</p>
+      <h2>🗺️ ${esc(t('nav_mapa', 'Mapa'))}</h2>
+      <p class="muted">Todo lo que necesita quien llega a trabajar: dónde vivirá, dónde trabaja, cómo llega y qué hay cerca.</p>
       <div class="filtros" id="filtros">
-        ${TIPOS.map(([k, n]) => `<label><input type="checkbox" value="${esc(k)}" checked> ${ICONO_LUGAR[k]} ${n}</label>`).join('')}
+        ${TIPOS.map(([k, n]) => `<label><input type="checkbox" value="${esc(k)}" checked> ${ICONO_LUGAR[k]} ${esc(n)}</label>`).join('')}
         <label><input type="checkbox" value="rutas" checked> 〰️ Rutas</label>
       </div>
-      <div id="mapa-leaflet" role="region" aria-label="Mapa de Vila-rodona"></div>
+      <div id="mapa-leaflet" role="region" aria-label="Mapa de la red de pueblos"></div>
       ${fuente('getLugares')} ${fuente('getRutas')}
       <div class="rejilla seccion" id="lista-rutas"></div>`;
   },
 
   async activar(raiz) {
-    const [p, lugares, rutas] = await Promise.all([getPueblo(), getLugares(), getRutas()]);
-    if (!window.L) { raiz.querySelector('#mapa-leaflet').textContent = 'No se pudo cargar el mapa (sin conexión).'; return; }
+    const fp = filtroPueblo();
+    const [red, lugares, rutas] = await Promise.all([getRed(), getLugares({ puebloId: fp }), getRutas(fp)]);
+    const centro = fp ? await getPueblo(fp) : red.centro;
+    if (!window.L) { raiz.querySelector('#mapa-leaflet').textContent = 'No se pudo cargar el mapa.'; return; }
 
     if (mapa) { mapa.remove(); mapa = null; }
-    mapa = L.map('mapa-leaflet').setView([p.lat, p.lng], p.zoom || 14);
+    mapa = L.map('mapa-leaflet').setView([centro.lat, centro.lng], centro.zoom || (fp ? 14 : 12));
     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 19, attribution: '© OpenStreetMap · prototipo (producción: Google Maps)',
     }).addTo(mapa);
+
+    // Nombre de cada pueblo sobre el mapa
+    for (const p of red.pueblos) {
+      if (fp && p.id !== fp) continue;
+      L.marker([p.lat, p.lng], { icon: L.divIcon({ className: '', html: `<div class="pin-pueblo">${esc(p.nombre)}</div>`, iconSize: null }), interactive: false }).addTo(mapa);
+    }
 
     // Una capa por tipo de lugar para poder filtrarlas
     const capas = {};
     for (const [k] of TIPOS) capas[k] = L.layerGroup().addTo(mapa);
     for (const l of lugares) {
       const icono = L.divIcon({ className: '', html: `<div class="pin">${ICONO_LUGAR[l.tipo] || '📍'}</div>`, iconSize: [28, 28], iconAnchor: [14, 14] });
-      L.marker([l.lat, l.lng], { icon: icono, title: l.nombre }).bindPopup(popup(l)).addTo(capas[l.tipo] || mapa);
+      L.marker([l.lat, l.lng], { icon: icono, title: l.nombre }).bindPopup(popup(l, red.pueblos)).addTo(capas[l.tipo] || mapa);
     }
     capas.rutas = L.layerGroup().addTo(mapa);
     for (const r of rutas) {
-      L.polyline(r.puntos, { color: /^#[0-9a-f]{3,8}$/i.test(r.color) ? r.color : '#1f5c99', weight: 5, opacity: .8, dashArray: r.tipo === 'cosechas' ? '8 8' : null })
+      L.polyline(r.puntos, { color: colorSeguro(r.color, '#1f5c99'), weight: 5, opacity: .8, dashArray: r.tipo === 'cosechas' ? '8 8' : null })
         .bindPopup(`<strong>${esc(r.nombre)}</strong><br>${esc(r.descripcion)}`).addTo(capas.rutas);
     }
 
@@ -64,7 +75,7 @@ export default {
     });
 
     raiz.querySelector('#lista-rutas').innerHTML = rutas.map(r => `
-      <div class="tarjeta"><h3><span style="color:${esc(r.color)}">〰️</span> ${esc(r.nombre)}</h3>
+      <div class="tarjeta"><h3><span style="color:${colorSeguro(r.color, '#1f5c99')}">〰️</span> ${esc(r.nombre)}</h3>
       <span class="etiqueta">${esc(r.tipo)}</span><p>${esc(r.descripcion)}</p></div>`).join('');
 
     setTimeout(() => mapa?.invalidateSize(), 100);

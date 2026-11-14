@@ -1,44 +1,64 @@
-// Indicadores de la campaña, SIEMPRE calculados a partir del estado actual.
+// Indicadores de la red o de un pueblo, SIEMPRE calculados a partir del estado actual.
 // En producción: agregación propia (p. ej. BigQuery / Looker Studio) sobre los datos anteriores.
 import { estado, HOY } from './estado.js';
-import { espera, copia, dias } from './comun.js';
+import { espera, copia, enPueblo, diasLaborables } from './comun.js';
 import { previsionActual } from './weather.js';
+import { caminoAnual } from './campana.js';
 
-// Días de trabajo de una oferta: lunes–sábado del periodo, menos días no aptos de la previsión
-function diasTrabajo(oferta, noAptos) {
-  let n = 0;
-  const total = dias(oferta.inicio, oferta.fin);
-  for (let i = 0; i <= total; i++) {
-    const f = new Date(Date.parse(oferta.inicio + 'T12:00:00Z') + i * 86400000).toISOString().slice(0, 10);
-    if (new Date(f + 'T12:00:00Z').getUTCDay() !== 0 && !noAptos.has(f)) n++;
-  }
-  return n;
-}
+const suma = (arr, f) => arr.reduce((s, x) => s + f(x), 0);
+const pct = (a, b) => (b ? Math.round((a / b) * 100) : 0);
+const media = (arr) => (arr.length ? arr.reduce((a, b) => a + b, 0) / arr.length : 0);
 
-export async function getIndicadores() {
+export async function getIndicadores(puebloId) {
   await espera();
-  const alojamientos = estado.lugares.filter((l) => l.tipo === 'alojamiento');
-  const camasDisponibles = alojamientos.reduce((s, a) => s + a.plazasLibres, 0);
-  const camasOcupadas = alojamientos.reduce((s, a) => s + (a.plazas - a.plazasLibres), 0);
+  const f = (x) => enPueblo(x, puebloId);
+  const oferta = (id) => estado.ofertas.find((o) => o.id === id);
 
-  const contratados = estado.temporeros.filter((t) => t.estado === 'contratado');
-  const temporerosBuscando = estado.temporeros.filter((t) => t.estado === 'busca').length;
-  const ofertasAbiertas = estado.ofertas.filter((o) => o.fin >= HOY && o.plazasCubiertas < o.plazas).length;
+  // Vivienda (siempre de los empleadores)
+  const alojamientos = estado.alojamientos.filter(f);
+  const camasEmpleadores = suma(alojamientos, (a) => a.plazas);
+  const camasLibres = suma(alojamientos, (a) => a.plazasLibres);
+  const camasOcupadas = camasEmpleadores - camasLibres;
+  const camasVerificadas = suma(alojamientos.filter((a) => a.verificado), (a) => a.plazas);
+  const empleadoresConAlojamiento = new Set(alojamientos.map((a) => a.empleadorId)).size;
+  const viviendasBolsaLibres = estado.viviendas.filter((v) => f(v) && !v.alquiladaPor && v.disponibleHasta >= HOY).length;
 
-  // Media de días de trabajo de los temporeros con contrato
+  // Ofertas vigentes
+  const vigentes = estado.ofertas.filter((o) => f(o) && o.fin >= HOY);
+  const ofertasAbiertas = vigentes.filter((o) => o.plazasCubiertas < o.plazas).length;
+  const ofertasConAlojamientoPct = pct(vigentes.filter((o) => o.alojamiento.incluido).length, vigentes.length);
+  const sectoresActivos = new Set(vigentes.map((o) => o.sector)).size;
+
+  // Temporeros: contratados según el pueblo de su oferta; los que buscan según dónde están
+  const contratados = estado.temporeros.filter((t) => t.estado === 'contratado' && oferta(t.ofertaId) && f(oferta(t.ofertaId)));
+  const temporerosBuscando = estado.temporeros.filter((t) => t.estado === 'busca' && (!puebloId || puebloId === 'red' || t.puebloId === puebloId)).length;
+  const solicitudesPendientes = estado.solicitudes.filter((s) => s.estado === 'pendiente' && oferta(s.ofertaId) && f(oferta(s.ofertaId))).length;
+
+  // Días de trabajo medio de los contratados (lunes–sábado menos días no aptos)
   const noAptos = new Set(previsionActual().filter((d) => !d.aptoCosecha).map((d) => d.fecha));
-  const diasLista = contratados.map((t) => estado.ofertas.find((o) => o.id === t.ofertaId)).filter(Boolean).map((o) => diasTrabajo(o, noAptos));
-  const diasTrabajoMedio = diasLista.length ? Math.round(diasLista.reduce((a, b) => a + b, 0) / diasLista.length) : 0;
+  const diasTrabajoMedio = Math.round(media(contratados.map((t) => { const o = oferta(t.ofertaId); return diasLaborables(o.inicio, o.fin, noAptos); })));
 
-  // Venta directa: % de fincas que venden directamente y kg vendidos (previos + reservas)
-  const conVenta = estado.fincas.filter((f) => f.ventaDirecta.activa).length;
-  const ventaDirectaPct = estado.fincas.length ? Math.round((conVenta / estado.fincas.length) * 100) : 0;
-  const kgPrevios = estado.fincas.reduce((s, f) => s + (f.ventasPreviasKg || 0), 0);
-  const kgReservas = estado.reservas.reduce((s, r) => s + r.kg, 0);
-  const kgVendidosDirecto = Math.round((kgPrevios + kgReservas) * 10) / 10;
+  // Meses con trabajo en el camino anual (contratados; si no hay, todos los temporeros)
+  const base = contratados.length ? contratados : estado.temporeros;
+  const mesesTrabajoMedio = Math.round(media(base.map((t) => caminoAnual(t.id).mesesConTrabajo)) * 10) / 10;
 
-  const comerciosActualizados = estado.lugares.filter((l) => l.tipo === 'comercio' && l.horarioCampana).length;
+  // Venta directa: % de empleadores que venden directamente y kg vendidos (previos + reservas)
+  const empleadores = estado.empleadores.filter(f);
+  const ventaDirectaPct = pct(empleadores.filter((e) => e.ventaDirecta?.activa).length, empleadores.length);
+  const kgVendidosDirecto = Math.round((suma(empleadores, (e) => e.ventasPreviasKg || 0) + suma(estado.reservas.filter(f), (r) => r.kg)) * 10) / 10;
 
-  return copia({ camasDisponibles, camasOcupadas, temporerosConContrato: contratados.length, temporerosBuscando,
-    ofertasAbiertas, diasTrabajoMedio, ventaDirectaPct, comerciosActualizados, kgVendidosDirecto });
+  const comerciosActualizados = estado.lugares.filter((l) => l.tipo === 'comercio' && l.horarioCampana && f(l)).length;
+  const ayudasAceptadas = estado.ayudas.filter((a) => a.estado === 'aceptada' && (!puebloId || puebloId === 'red' || a.desdePuebloId === puebloId || a.haciaPuebloId === puebloId)).length;
+  const reservasTurismo = estado.reservasTurismo.filter(f).length;
+
+  return copia({
+    // v1
+    camasLibres, camasOcupadas, temporerosConContrato: contratados.length, temporerosBuscando, ofertasAbiertas,
+    diasTrabajoMedio, ventaDirectaPct, comerciosActualizados, kgVendidosDirecto,
+    // v2
+    pueblosEnRed: estado.pueblos.length, empleadoresConAlojamiento, ofertasConAlojamientoPct, camasEmpleadores, camasVerificadas,
+    viviendasBolsaLibres, mesesTrabajoMedio, ayudasAceptadas, reservasTurismo, sectoresActivos,
+    // extra
+    solicitudesPendientes
+  });
 }

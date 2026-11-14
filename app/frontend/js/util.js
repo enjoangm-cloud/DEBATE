@@ -2,7 +2,13 @@
 import { FUENTES } from '../../backend/api.js';
 
 // Estado de la interfaz (idioma, textos traducidos, rol elegido)
-export const estado = { idioma: 'es', textos: {}, rol: null };
+export const estado = { idioma: 'es', textos: {}, rol: null, pueblo: 'red' };
+
+// Filtro de pueblo para el backend: 'red' = toda la red (undefined)
+export const filtroPueblo = () => (estado.pueblo === 'red' ? undefined : estado.pueblo);
+
+// Solo colores hexadecimales (evita inyectar CSS desde los datos)
+export const colorSeguro = (c, porDefecto = '#3f6b2a') => (/^#[0-9a-f]{3,8}$/i.test(c || '') ? c : porDefecto);
 
 // Traduce una clave de interfaz; si no existe, usa el texto por defecto
 export const t = (clave, porDefecto = clave) => estado.textos[clave] || porDefecto;
@@ -24,7 +30,7 @@ export const euros = (n) => Number(n).toLocaleString('es-ES', { style: 'currency
 
 // Iconos por tipo de cielo y de lugar
 export const ICONO_CIELO = { sol: '☀️', nubes: '⛅', lluvia: '🌧️', tormenta: '⛈️', niebla: '🌫️' };
-export const ICONO_LUGAR = { alojamiento: '🛏️', finca: '🌳', comercio: '🛒', recogida: '🚐', servicio: 'ℹ️' };
+export const ICONO_LUGAR = { alojamiento: '🛏️', empleador: '🏷️', finca: '🌳', comercio: '🛒', recogida: '🚐', servicio: 'ℹ️', patrimonio: '🏛️' };
 
 // Aviso flotante breve
 export function aviso(texto) {
@@ -36,3 +42,13 @@ export function aviso(texto) {
 
 // Busca un elemento por id en una lista
 export const porId = (lista, id) => lista.find(x => x.id === id);
+
+// Nombre de un pueblo a partir de su id
+export const nombrePueblo = (pueblos, id) =>
+  id === 'red' ? t('red', 'Toda la red') : (pueblos.find(p => p.id === id)?.nombre || id || '');
+
+// Etiqueta de sector con su emoji
+export const etiquetaSector = (sectores, id) => {
+  const s = sectores.find(x => x.id === id);
+  return s ? `<span class="etiqueta">${esc(s.emoji)} ${esc(t('sector_' + id, s.nombre))}</span>` : '';
+};

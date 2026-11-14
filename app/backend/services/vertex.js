@@ -2,7 +2,7 @@
 // En producción: Vertex AI (Gemini) — redacta avisos sencillos, traduce y propone emparejamientos.
 // Aquí son plantillas y diccionarios deterministas.
 import { estado } from './estado.js';
-import { espera, copia } from './comun.js';
+import { espera, copia, enPueblo } from './comun.js';
 import { TEXTOS, IDIOMAS } from '../data/textos.js';
 
 // "Gemini" convierte el dato técnico en un mensaje corto y una acción
@@ -10,7 +10,7 @@ export function redactarAlerta(tipo, d, dia) {
   switch (tipo) {
     case 'lluvia':
       return d.lluviaMm >= 10
-        ? { mensajeSencillo: `El ${dia} llueve mucho. Con el suelo mojado no se puede varear.`, accion: `Parad la recogida el ${dia}; la cuadrilla descansa.` }
+        ? { mensajeSencillo: `El ${dia} llueve mucho. Con el suelo mojado no se puede varear.`, accion: `Parad la recogida el ${dia}; mirad en Ayuda entre pueblos si hay trabajo a cubierto.` }
         : { mensajeSencillo: `El ${dia} puede llover un poco. La oliva mojada no se recoge bien.`, accion: `Empezad tarde el ${dia} o cambiad a tareas en el almacén.` };
     case 'viento':
       return { mensajeSencillo: `El ${dia} sopla mestral fuerte. Las lonas vuelan y es peligroso subir a la escalera.`, accion: `No vareéis el ${dia}; usad el día para limpiar y preparar cajas.` };
@@ -40,8 +40,9 @@ export async function getTextos(idioma) {
   return copia({ ...TEXTOS.es, ...(TEXTOS[idioma] || {}) });
 }
 
-// Emparejamientos propuestos por la IA (el dinamizador decide en campana.js)
-export async function getEmparejamientosIA() {
+// Emparejamientos propuestos por la IA (el dinamizador decide en campana.js). puebloId = el de la oferta.
+export async function getEmparejamientosIA(puebloId) {
   await espera();
-  return copia(estado.emparejamientos);
+  const lista = estado.emparejamientos.map((e) => ({ ...e, puebloId: estado.ofertas.find((o) => o.id === e.ofertaId)?.puebloId ?? null }));
+  return copia(lista.filter((e) => enPueblo(e, puebloId)));
 }

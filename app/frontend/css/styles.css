@@ -105,3 +105,23 @@ details.tarjeta summary { cursor: pointer; font-weight: 700; font-size: 1.1rem; 
   .marca h1 { font-size: 1.2rem; }
   #mapa-leaflet { height: 420px; }
 }
+
+/* ===== Red: gráfico anual por sectores ===== */
+.anual { display: grid; grid-template-columns: repeat(12, minmax(28px, 1fr)); gap: .35rem; height: 240px; align-items: end; }
+.anual-col { display: flex; flex-direction: column; justify-content: flex-end; height: 100%; text-align: center; }
+.anual-barra { display: flex; flex-direction: column-reverse; border-radius: 6px 6px 0 0; overflow: hidden; min-height: 4px; }
+.anual-barra span { display: block; min-height: 2px; }
+.anual-total { font-size: .8rem; font-weight: 700; }
+.anual-mes { font-size: .8rem; color: var(--gris); margin-top: .2rem; }
+.leyenda { font-size: .85rem; display: inline-flex; align-items: center; gap: .3rem; margin-right: .6rem; }
+.leyenda i { display: inline-block; width: 14px; height: 14px; border-radius: 3px; }
+
+/* ===== Camino anual del temporero ===== */
+.camino { list-style: none; padding: 0; margin: 0; border-left: 4px solid var(--verde); }
+.camino li { position: relative; padding: .4rem 0 .6rem 1rem; }
+.camino li::before { content: ""; position: absolute; left: -10px; top: .75rem; width: 14px; height: 14px; border-radius: 50%; background: #fff; border: 3px solid var(--verde); }
+
+.chips { display: flex; flex-wrap: wrap; gap: .4rem; margin: .5rem 0 1rem; }
+.chip { border: 2px solid var(--borde); background: #fff; border-radius: 999px; padding: .3rem .8rem; cursor: pointer; font-weight: 600; }
+.chip.activo { border-color: var(--verde); background: var(--verde-claro); color: var(--verde); }
+.pin-pueblo { background: var(--verde); color: #fff; font-weight: 700; font-size: .85rem; padding: .15rem .5rem; border-radius: 6px; white-space: nowrap; transform: translate(-50%, -150%); box-shadow: 0 1px 3px rgba(0,0,0,.3); width: max-content; }

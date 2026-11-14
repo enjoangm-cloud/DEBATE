@@ -1,15 +1,16 @@
 // Arranque de la app: idioma, tamaño de texto y navegación entre pantallas
-import { HOY, getIdiomas, getTextos } from '../../backend/api.js';
+import { HOY, getIdiomas, getTextos, getPueblos } from '../../backend/api.js';
 import { estado, fechaLarga, esc } from './util.js';
 import inicio from './pantallas/inicio.js';
 import calendario from './pantallas/calendario.js';
 import mapa from './pantallas/mapa.js';
 import trabajo from './pantallas/trabajo.js';
 import pueblo from './pantallas/pueblo.js';
-import comprar from './pantallas/comprar.js';
+import red from './pantallas/red.js';
+import turismo from './pantallas/turismo.js';
 import tramites from './pantallas/tramites.js';
 
-const PANTALLAS = { inicio, calendario, mapa, trabajo, pueblo, comprar, tramites };
+const PANTALLAS = { inicio, calendario, mapa, trabajo, red, turismo, pueblo, tramites, comprar: turismo }; // 'comprar' = enlace antiguo
 const vista = document.getElementById('vista');
 
 // --- Preferencias guardadas en el navegador (si se puede) ---
@@ -40,9 +41,24 @@ async function cambiarIdioma(codigo) {
     if (estado.textos[k]) el.textContent = estado.textos[k];
   });
   guardar('idioma', codigo);
+  if (pueblos.length) rellenarPueblos(); // traduce 'Toda la red'
   pintar();
 }
 selIdioma.onchange = () => cambiarIdioma(selIdioma.value);
+
+// --- Pueblo seleccionado ('red' = los 5 pueblos) ---
+const selPueblo = document.getElementById('sel-pueblo');
+let pueblos = [];
+selPueblo.onchange = () => {
+  estado.pueblo = (selPueblo.value === 'red' || pueblos.some(p => p.id === selPueblo.value)) ? selPueblo.value : 'red';
+  guardar('pueblo', estado.pueblo);
+  pintar();
+};
+function rellenarPueblos() {
+  selPueblo.innerHTML = `<option value="red">${esc(estado.textos.red || 'Toda la red')}</option>` +
+    pueblos.map(p => `<option value="${esc(p.id)}">${esc(p.nombre)}</option>`).join('');
+  selPueblo.value = estado.pueblo;
+}
 
 // --- Navegación por #hash ---
 let pintando = 0;
@@ -67,7 +83,10 @@ window.addEventListener('hashchange', () => { pintar(); vista.focus(); });
 // --- Inicio ---
 (async () => {
   document.getElementById('fecha-hoy').textContent = fechaLarga(HOY);
-  idiomas = await getIdiomas();
+  [idiomas, pueblos] = await Promise.all([getIdiomas(), getPueblos()]);
+  const pGuardado = leer('pueblo', 'red');
+  estado.pueblo = (pGuardado === 'red' || pueblos.some(p => p.id === pGuardado)) ? pGuardado : 'red';
+  rellenarPueblos();
   selIdioma.innerHTML = idiomas.map(i => `<option value="${esc(i.codigo)}">${esc(i.nombre)}</option>`).join('');
   const inicial = leer('idioma', 'es');
   selIdioma.value = idiomas.some(i => i.codigo === inicial) ? inicial : 'es';

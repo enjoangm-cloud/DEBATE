@@ -2,12 +2,16 @@
 
 ## Qué es
 Reto de un concurso de ideas (zona Madrid): usar servicios de Google para resolver problemas de
-pueblos de **menos de 5.000 habitantes**. Nuestra idea: organizar la **campaña de cosecha** uniendo
-temporeros, agricultores, el pueblo y compradores finales.
-Nombre del producto: **pendiente** (provisional "Campaña Vila-rodona").
+pueblos de **menos de 5.000 habitantes**. Nuestra idea: una **red de pueblos** que organiza el **trabajo de
+temporada todo el año** (campo, turismo rural, hostelería, bodega, forestal) uniendo temporeros, empleadores,
+ayuntamientos, visitantes y compradores.
+Nombre del producto: **pendiente** (provisional "Temporada del Gaià").
 
 ## Demo
-- Pueblo real: **Vila-rodona** (Alt Camp, Tarragona), ~1.382 hab. Cultivos: uva, oliva, almendra, avellana.
+- Red real de 5 pueblos del Alt Camp (Gaià): Vila-rodona 1.382 · Aiguamúrcia 987 · Montferri 473 · Bràfim 696 · Vilabella 723 hab.
+  Es una **plantilla** para cualquier pueblo < 5.000 hab. Selector de pueblo arriba ("Toda la red" o uno).
+- **Vivienda: la pone quien contrata** (propia o alquilada de la bolsa). El ayuntamiento verifica. Temporero paga 0 €.
+  El pueblo NO da camas.
 - Fecha "hoy" de la demo: 2026-11-14 → campaña de **oliva** en curso.
 - **Todo simulado**: sin llamadas a APIs. Cada dato lleva su etiqueta "🧪 Google X (simulado)".
 - Fincas y personas ficticias marcadas "(ejemplo)". Lugares públicos, reales.
@@ -32,7 +36,7 @@ app/                 ← lo que publica Vercel (vercel.json → outputDirectory:
   backend/services/  ← un archivo por servicio de Google simulado
   backend/data/      ← datos de ejemplo (módulos ES, no JSON)
 docs/                ← idea, canvas, contrato frontend↔backend, seguridad
-scripts/             ← pruebas en Node (node scripts/probar-backend.mjs)
+scripts/             ← pruebas: probar-backend, probar-pantallas, probar-navegador (jsdom, NODE_PATH)
 ```
 Sin build ni dependencias. Probar en local: `cd app && python3 -m http.server 8000`.
 
