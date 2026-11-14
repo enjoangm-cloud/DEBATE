@@ -30,7 +30,7 @@ También rellenamos un **Business Model Canvas** (ver `docs/idea.md`).
 
 ## Estructura
 ```
-app/                 ← lo que se publica en Firebase Hosting (firebase.json → public: app)
+app/                 ← lo que se publica (Vercel ahora; Firebase preparado)
   index.html
   frontend/css, frontend/js/main.js, frontend/js/pantallas/*.js
   frontend/vendor/   ← Leaflet y fuente Atkinson Hyperlegible alojados aquí (sin CDNs)
@@ -49,13 +49,13 @@ Sin build ni dependencias. Probar en local: `cd app && python3 -m http.server 80
 - Texto grande y controles A−/A+ en la interfaz (preferencia del equipo).
 
 ## Seguridad (no romper)
-- Nada de scripts inline ni CDNs: la CSP de `firebase.json` los bloquea.
-- Solo Google Sites puede incrustar la demo (frame-ancestors en `firebase.json`).
+- Nada de scripts inline ni CDNs: la CSP de `vercel.json` / `firebase.json` los bloquea.
+- Solo Google Sites puede incrustar la demo (frame-ancestors).
 - Escapar con `esc()` todo dato que entre en HTML.
 - Ninguna clave de API en el código. Ver `docs/seguridad.md`.
 
 ## Publicación
-- **Google Site** = portada del proyecto (lo monta el equipo a mano) con la demo incrustada ("Insertar → URL").
-- **Firebase Hosting** = la demo. Cada push a `main` → GitHub Action `.github/workflows/firebase-deploy.yml`
-  (primero pruebas; si fallan, no publica). Secreto en GitHub: `FIREBASE_SERVICE_ACCOUNT`.
-- `vercel.json` queda solo como respaldo; se borra cuando Firebase funcione.
+- **Ahora: Vercel** (`vercel.json`) → https://debateideathonm.vercel.app. Cada push a `main` se publica solo.
+- **Google Site** = portada del proyecto con la demo incrustada ("Insertar → URL") y el QR. Solo Google Sites puede incrustarla.
+- **Firebase: en pausa.** `firebase.json` y la Action (solo manual) están listos; se activará si sobra tiempo
+  (guía en `google-sites/02-guia-firebase-github-sites.md`).

@@ -1,12 +1,13 @@
-# Publica la demo en Firebase Hosting (Google) cada vez que se sube un cambio a main.
+# Publica la demo en Firebase Hosting (Google). EN PAUSA: de momento la demo está en Vercel.
 # Antes de publicar ejecuta las pruebas: si algo falla, NO se publica.
 # Necesita un secreto en GitHub: FIREBASE_SERVICE_ACCOUNT (el JSON de la cuenta de servicio).
 # El ID del proyecto se lee de ese mismo JSON, así que no hay que escribirlo en ningún sitio.
 name: Publicar en Firebase
 
 on:
-  push:
-    branches: [main]
+  # En pausa: solo se lanza a mano. Para activar la publicación automática, añade de nuevo:
+  #   push:
+  #     branches: [main]
   workflow_dispatch: {}
 
 permissions:

@@ -11,7 +11,7 @@ Estilo recomendado en Sites: tema **"Simple"** o **"Vision"**, color verde oliva
 **Subtítulo:** Trabajo de temporada todo el año en los pueblos de la España rural
 
 Botón 1: **Ver la demo** → enlace a la sección "Demo"
-Botón 2: **Soy joven y quiero probar** → enlace a la demo, pantalla Jóvenes (`<URL de la demo>#jovenes`)
+Botón 2: **Soy joven y quiero probar** → enlace a la demo, pantalla Jóvenes (`https://debateideathonm.vercel.app/#jovenes`)
 
 ---
 
@@ -91,7 +91,7 @@ Punto de equilibrio: 3,4 redes. *Estimación de concurso.*
 
 ## 7 · Demo
 
-**Insertar → Insertar → Por URL** → pega la URL de Firebase (`https://<proyecto>.web.app`) → **Toda la página**.
+**Insertar → Insertar → Por URL** → pega `https://debateideathonm.vercel.app` → **Toda la página**.
 Altura recomendada: la máxima que permita la sección.
 
 Debajo, un texto: *"¿No se ve bien en el móvil? Ábrela a pantalla completa"* con enlace a la misma URL.
