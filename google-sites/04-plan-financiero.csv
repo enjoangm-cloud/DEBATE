@@ -1,0 +1,20 @@
+Tipo,Concepto,Cantidad,Precio o importe (€),Total (€)
+Supuesto,Redes el año 1,4,,
+Ingreso,Licencia anual por red,=C2,6000,=C3*D3
+Ingreso,Cuota empleador por temporada (15 empleadores x 2 temporadas por red),=15*2*C2,60,=C4*D4
+Ingreso,Comisión 8 % experiencias turísticas (15.000 € por red),=C2,=0.08*15000,=C5*D5
+Ingreso,Comisión 5 % venta directa (25.000 € por red),=C2,=0.05*25000,=C6*D6
+Ingreso,Comisión 5 % bolsa de viviendas (5 casas x 5 meses x 650 € por red),=C2,=0.05*5*5*650,=C7*D7
+Total,TOTAL INGRESOS,,,=SUM(E3:E7)
+Gasto,Equipo: 2 personas a media jornada,1,24000,=C9*D9
+Gasto,Viajes y formación por red,=C2,1000,=C10*D10
+Gasto,"Gestoría, seguros y protección de datos",1,2500,=C11*D11
+Gasto,Marketing y ferias,1,2000,=C12*D12
+Gasto,"APIs de Google (Maps, Weather, Vertex AI)",1,1200,=C13*D13
+Gasto,Web y dominio,1,500,=C14*D14
+Gasto,"Material (carteles, QR)",1,500,=C15*D15
+Gasto,Imprevistos (10 %),,,=0.1*SUM(E9:E15)
+Total,TOTAL GASTOS,,,=SUM(E9:E16)
+Resultado,BENEFICIO ANTES DE IMPUESTOS,,,=E8-E17
+Resultado,Impuesto de sociedades (15 %),,,=-0.15*E18
+Resultado,BENEFICIO NETO,,,=E18+E19
