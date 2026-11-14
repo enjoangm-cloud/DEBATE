@@ -19,7 +19,7 @@
 //              recomendar, oportunidades, relevo, practicas
 export const TEXTOS = {
   es: {
-    nav_inicio: 'Inicio', nav_calendario: 'Calendario', nav_mapa: 'Mapa', nav_trabajo: 'Trabajo', nav_pueblo: 'Pueblo', nav_comprar: 'Comprar', nav_tramites: 'Trámites',
+    nav_inicio: 'Inicio', nav_calendario: 'Calendario', nav_mapa: 'Mapa', nav_trabajo: 'Trabajo', nav_pueblo: 'Gestión', nav_comprar: 'Comprar', nav_tramites: 'Trámites',
     rol_temporero: 'Temporero', rol_agricultor: 'Agricultor', rol_dinamizador: 'Dinamizador', rol_comprador: 'Comprador',
     titulo_app: "Temporada del Gaià", subtitulo_app: "Trabajo de temporada todo el año en 5 pueblos que se ayudan",
     aviso_tiempo: 'Aviso del tiempo', apto: 'Apto para cosechar', no_apto: 'No apto para cosechar', hoy: 'Hoy', manana: 'Mañana',
@@ -36,7 +36,7 @@ export const TEXTOS = {
     nav_espana: "España", nav_jovenes: "Jóvenes", arquetipo: "Tipo de red", corredor: "Corredor de temporadas", ruta_arraigo: "Ruta para quedarse", probar: "Probar", anyo_completo: "Año completo", quedarse: "Quedarse", apuntarme: "Apuntarme", recomendar: "Recomiéndame una red", oportunidades: "Oportunidades", relevo: "Relevo", practicas: "Prácticas"
   },
   ca: {
-    nav_inicio: 'Inici', nav_calendario: 'Calendari', nav_mapa: 'Mapa', nav_trabajo: 'Feina', nav_pueblo: 'Poble', nav_comprar: 'Comprar', nav_tramites: 'Tràmits',
+    nav_inicio: 'Inici', nav_calendario: 'Calendari', nav_mapa: 'Mapa', nav_trabajo: 'Feina', nav_pueblo: 'Gestió', nav_comprar: 'Comprar', nav_tramites: 'Tràmits',
     rol_temporero: 'Temporer', rol_agricultor: 'Pagès', rol_dinamizador: 'Dinamitzador', rol_comprador: 'Comprador',
     titulo_app: "Temporada del Gaià", subtitulo_app: "Feina de temporada tot l'any en 5 pobles que s'ajuden",
     aviso_tiempo: 'Avís del temps', apto: 'Apte per collir', no_apto: 'No apte per collir', hoy: 'Avui', manana: 'Demà',
@@ -53,7 +53,7 @@ export const TEXTOS = {
     nav_espana: "Espanya", nav_jovenes: "Joves", arquetipo: "Tipus de xarxa", corredor: "Corredor de temporades", ruta_arraigo: "Ruta per quedar-se", probar: "Provar", anyo_completo: "Any complet", quedarse: "Quedar-se", apuntarme: "Apuntar-me", recomendar: "Recomana'm una xarxa", oportunidades: "Oportunitats", relevo: "Relleu", practicas: "Pràctiques"
   },
   ro: {
-    nav_inicio: 'Acasă', nav_calendario: 'Calendar', nav_mapa: 'Hartă', nav_trabajo: 'Muncă', nav_pueblo: 'Satul', nav_comprar: 'Cumpără', nav_tramites: 'Acte',
+    nav_inicio: 'Acasă', nav_calendario: 'Calendar', nav_mapa: 'Hartă', nav_trabajo: 'Muncă', nav_pueblo: 'Gestionare', nav_comprar: 'Cumpără', nav_tramites: 'Acte',
     rol_temporero: 'Lucrător sezonier', rol_agricultor: 'Fermier', rol_dinamizador: 'Coordonator', rol_comprador: 'Cumpărător',
     titulo_app: "Sezonul pe Gaià", subtitulo_app: "Muncă sezonieră tot anul în 5 sate care se ajută",
     aviso_tiempo: 'Avertizare meteo', apto: 'Bun pentru recoltat', no_apto: 'Nu se recoltează', hoy: 'Azi', manana: 'Mâine',
@@ -70,7 +70,7 @@ export const TEXTOS = {
     nav_espana: "Spania", nav_jovenes: "Tineri", arquetipo: "Tip de rețea", corredor: "Coridorul sezoanelor", ruta_arraigo: "Drumul ca să rămâi", probar: "Încearcă", anyo_completo: "Un an întreg", quedarse: "Rămâi", apuntarme: "Mă înscriu", recomendar: "Recomandă-mi o rețea", oportunidades: "Oportunități", relevo: "Preluare", practicas: "Stagiu de practică"
   },
   ar: {
-    nav_inicio: 'الرئيسية', nav_calendario: 'التقويم', nav_mapa: 'الخريطة', nav_trabajo: 'العمل', nav_pueblo: 'القرية', nav_comprar: 'شراء', nav_tramites: 'الإجراءات',
+    nav_inicio: 'الرئيسية', nav_calendario: 'التقويم', nav_mapa: 'الخريطة', nav_trabajo: 'العمل', nav_pueblo: 'الإدارة', nav_comprar: 'شراء', nav_tramites: 'الإجراءات',
     rol_temporero: 'عامل موسمي', rol_agricultor: 'مزارع', rol_dinamizador: 'المنسق', rol_comprador: 'مشتري',
     titulo_app: "موسم غايا", subtitulo_app: "عمل موسمي طوال السنة في 5 قرى تتعاون فيما بينها",
     aviso_tiempo: 'تنبيه الطقس', apto: 'مناسب للحصاد', no_apto: 'غير مناسب للحصاد', hoy: 'اليوم', manana: 'غدًا',
@@ -87,7 +87,7 @@ export const TEXTOS = {
     nav_espana: "إسبانيا", nav_jovenes: "الشباب", arquetipo: "نوع الشبكة", corredor: "ممر المواسم", ruta_arraigo: "طريق الاستقرار", probar: "جرّب", anyo_completo: "سنة كاملة", quedarse: "ابقَ", apuntarme: "سجّلني", recomendar: "اقترح لي شبكة", oportunidades: "الفرص", relevo: "تسلّم المشروع", practicas: "تدريب عملي"
   },
   fr: {
-    nav_inicio: 'Accueil', nav_calendario: 'Calendrier', nav_mapa: 'Carte', nav_trabajo: 'Travail', nav_pueblo: 'Village', nav_comprar: 'Acheter', nav_tramites: 'Démarches',
+    nav_inicio: 'Accueil', nav_calendario: 'Calendrier', nav_mapa: 'Carte', nav_trabajo: 'Travail', nav_pueblo: 'Gestion', nav_comprar: 'Acheter', nav_tramites: 'Démarches',
     rol_temporero: 'Saisonnier', rol_agricultor: 'Agriculteur', rol_dinamizador: 'Coordinateur', rol_comprador: 'Acheteur',
     titulo_app: "Saison du Gaià", subtitulo_app: "Du travail saisonnier toute l'année dans 5 villages qui s'entraident",
     aviso_tiempo: 'Alerte météo', apto: 'Bon pour récolter', no_apto: 'Pas de récolte', hoy: "Aujourd'hui", manana: 'Demain',
@@ -104,7 +104,7 @@ export const TEXTOS = {
     nav_espana: "Espagne", nav_jovenes: "Jeunes", arquetipo: "Type de réseau", corredor: "Corridor des saisons", ruta_arraigo: "Parcours pour rester", probar: "Essayer", anyo_completo: "Année complète", quedarse: "Rester", apuntarme: "Je m'inscris", recomendar: "Recommande-moi un réseau", oportunidades: "Opportunités", relevo: "Reprise", practicas: "Stage"
   },
   en: {
-    nav_inicio: 'Home', nav_calendario: 'Calendar', nav_mapa: 'Map', nav_trabajo: 'Work', nav_pueblo: 'Village', nav_comprar: 'Buy', nav_tramites: 'Paperwork',
+    nav_inicio: 'Home', nav_calendario: 'Calendar', nav_mapa: 'Map', nav_trabajo: 'Work', nav_pueblo: 'Management', nav_comprar: 'Buy', nav_tramites: 'Paperwork',
     rol_temporero: 'Seasonal worker', rol_agricultor: 'Farmer', rol_dinamizador: 'Coordinator', rol_comprador: 'Buyer',
     titulo_app: "Gaià Seasons", subtitulo_app: "Seasonal work all year round in 5 villages that help each other",
     aviso_tiempo: 'Weather alert', apto: 'Good for harvesting', no_apto: 'No harvesting', hoy: 'Today', manana: 'Tomorrow',

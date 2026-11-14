@@ -4,11 +4,11 @@ import { t, esc, estado, fuente, filtroPueblo, nombrePueblo } from '../util.js';
 
 // Rol → pantalla a la que lleva
 const ROLES = [
-  { id: 'temporero',   ico: '🧑‍🌾', destino: 'trabajo', texto: 'Busco trabajo todo el año, con casa y transporte' },
-  { id: 'agricultor',  ico: '🚜',  destino: 'pueblo',  texto: 'Contrato gente y les busco vivienda' },
-  { id: 'dinamizador', ico: '🏛️', destino: 'red',     texto: 'Coordino la red de pueblos' },
-  { id: 'comprador',   ico: '🧺',  destino: 'turismo', texto: 'Quiero visitar, vivir la cosecha y comprar directo' },
-  { id: 'joven',       ico: '🧑‍🎓', destino: 'jovenes', texto: 'Quiero probar a vivir y trabajar en un pueblo' },
+  { id: 'temporero',   nombre: 'Temporero',   ico: '🧑‍🌾', destino: 'trabajo', texto: 'Busco trabajo todo el año, con casa y transporte' },
+  { id: 'agricultor',  nombre: 'Empleador',   ico: '🚜',  destino: 'pueblo',  texto: 'Contrato gente y les busco vivienda' },
+  { id: 'dinamizador', nombre: 'Dinamizador', ico: '🏛️', destino: 'red',     texto: 'Coordino la red de pueblos' },
+  { id: 'comprador',   nombre: 'Visitante',   ico: '🧺',  destino: 'turismo', texto: 'Quiero visitar, vivir la cosecha y comprar directo' },
+  { id: 'joven',       nombre: 'Joven',       ico: '🧑‍🎓', destino: 'jovenes', texto: 'Quiero probar a vivir y trabajar en un pueblo' },
 ];
 
 export default {
@@ -48,7 +48,7 @@ export default {
           ${ROLES.map(r => `
             <button class="rol ${estado.rol === r.id ? 'activo' : ''}" data-rol="${esc(r.id)}" data-destino="${esc(r.destino)}">
               <span class="ico">${r.ico}</span>
-              <strong>${esc(t('rol_' + r.id, r.id))}</strong>
+              <strong>${esc(t('rol_' + r.id, r.nombre))}</strong>
               <span class="muted">${esc(r.texto)}</span>
             </button>`).join('')}
         </div>
@@ -59,7 +59,7 @@ export default {
         <div class="rejilla">
           <div class="tarjeta"><div class="cifra">${ind.ofertasAbiertas}</div>ofertas abiertas en ${ind.sectoresActivos} sectores</div>
           <div class="tarjeta"><div class="cifra">${ind.ofertasConAlojamientoPct} %</div>de las ofertas incluyen vivienda del empleador</div>
-          <div class="tarjeta"><div class="cifra">${ind.mesesTrabajoMedio}</div>meses de trabajo encadenado por temporero</div>
+          <div class="tarjeta"><div class="cifra">${Number(ind.mesesTrabajoMedio).toLocaleString('es-ES')}</div>meses de trabajo encadenado por temporero</div>
           <div class="tarjeta"><div class="cifra">${ind.temporerosConContrato}</div>temporeros con contrato</div>
         </div>
         ${fuente('getIndicadores')}

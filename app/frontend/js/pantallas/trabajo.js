@@ -9,7 +9,12 @@ let sectorActual = 'todos'; // filtro de sector
 export default {
   async html() {
     const [pueblos, sectores, temporeros, solicitudes] = await Promise.all([getPueblos(), getSectores(), getTemporeros(), getSolicitudes()]);
-    temporeroActual ??= temporeros.find(x => x.estado === 'busca')?.id || temporeros[0]?.id;
+    // Por defecto, el temporero con el camino más largo (enseña el trabajo encadenado todo el año)
+    if (!temporeroActual) {
+      const caminos = await Promise.all(temporeros.map(x => getCaminoAnual(x.id)));
+      const mejor = caminos.reduce((a, c) => (c?.mesesConTrabajo || 0) > (a?.mesesConTrabajo || 0) ? c : a, null);
+      temporeroActual = mejor?.temporeroId || temporeros[0]?.id;
+    }
     if (!sectores.some(s => s.id === sectorActual)) sectorActual = 'todos';
     const filtro = { puebloId: filtroPueblo(), sector: sectorActual === 'todos' ? undefined : sectorActual };
 
@@ -33,7 +38,7 @@ export default {
 
       ${camino && camino.tramos?.length ? `
       <section class="tarjeta destacada" style="margin-bottom:1.25rem">
-        <h3>🗓️ ${esc(t('camino_anual', 'Tu año de trabajo'))}: <strong>${camino.mesesConTrabajo}</strong> ${esc(t('meses_trabajo', 'meses con trabajo'))} · ${camino.diasTrabajo} días</h3>
+        <h3>🗓️ ${esc(t('camino_anual', 'Tu año de trabajo'))}: <strong>${camino.mesesConTrabajo}</strong> ${esc(t('meses_trabajo', 'meses con trabajo').toLowerCase())} · ${camino.diasTrabajo} días</h3>
         <ul class="camino">
           ${camino.tramos.map(tr => `<li><strong>${fechaCorta(tr.inicio)} → ${fechaCorta(tr.fin)}</strong> ·
             ${esc(np(tr.puebloId))} ${etiquetaSector(sectores, tr.sector)}<br>
@@ -69,8 +74,8 @@ export default {
             </div>
             ${aloj ? `<p class="muted">🏠 ${esc(aloj.nombre)} · ${aloj.verificado ? '✅ ' + esc(t('verificado', 'Verificada')) + ' por ' + esc(aloj.verificadoPor) : '⏳ ' + esc(t('pendiente_verificar', 'Pendiente de verificar'))}
               · ${esc(t('coste_temporero', 'Te cuesta'))}: <strong>${euros(aloj.costeTemporero)}</strong></p>` : ''}
-            ${rec ? `<p class="muted">🚐 Recogida: ${esc(rec.nombre)} a las ${esc(rec.hora || '')}</p>` : ''}
-            <p class="muted">${esc(o.tareas || '')} · Encargado habla: ${esc((o.idiomasEncargado || []).join(', '))}</p>
+            ${rec ? `<p class="muted">🚐 ${/^recogida/i.test(rec.nombre) ? '' : 'Recogida: '}${esc(rec.nombre)} a las ${esc(rec.hora || '')}</p>` : ''}
+            <p class="muted">${esc(Array.isArray(o.tareas) ? o.tareas.join(', ') : (o.tareas || ''))} · Encargado habla: ${esc((o.idiomasEncargado || []).join(', '))}</p>
             <p><strong>${libres}</strong> ${esc(t('plazas_libres', 'plazas libres'))} de ${o.plazas}</p>
             <div class="fila">
               <button class="btn" data-oferta="${esc(o.id)}" ${libres <= 0 || yaPedida(o.id) ? 'disabled' : ''}>

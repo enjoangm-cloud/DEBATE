@@ -1,10 +1,11 @@
 /* Atkinson Hyperlegible (Google Fonts, licencia OFL) alojada en nuestro propio servidor.
    Así el navegador del visitante NO contacta con Google: su IP no se envía a terceros (RGPD).
-   Elegida porque está diseñada para leerse bien con baja visión y textos grandes. */
+   Elegida porque está diseñada para leerse bien con baja visión y textos grandes.
+   Los dígitos (U+0030-0039) se excluyen a propósito: esta fuente tacha el cero y en precios confunde. */
 @font-face {
   font-family: 'Atkinson Hyperlegible'; font-style: normal; font-weight: 400; font-display: swap;
   src: url(../vendor/fuentes/atkinson-hyperlegible-latin-400-normal.woff2) format('woff2');
-  unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
+  unicode-range: U+0000-002F,U+003A-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
 }
 @font-face {
   font-family: 'Atkinson Hyperlegible'; font-style: normal; font-weight: 400; font-display: swap;
@@ -14,7 +15,7 @@
 @font-face {
   font-family: 'Atkinson Hyperlegible'; font-style: normal; font-weight: 700; font-display: swap;
   src: url(../vendor/fuentes/atkinson-hyperlegible-latin-700-normal.woff2) format('woff2');
-  unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
+  unicode-range: U+0000-002F,U+003A-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
 }
 @font-face {
   font-family: 'Atkinson Hyperlegible'; font-style: normal; font-weight: 700; font-display: swap;
