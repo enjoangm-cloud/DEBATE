@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DEBATE · Campaña de cosecha en Vila-rodona (demo)</title>
+  <meta name="description" content="Prototipo: organizar la campaña de cosecha en un pueblo de menos de 5.000 habitantes con Google Maps, Business Profile, Weather y Vertex AI.">
+  <!-- Mapa del prototipo: Leaflet + OpenStreetMap (sin clave). En producción: Google Maps JavaScript API -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <link rel="stylesheet" href="frontend/css/styles.css">
+</head>
+<body>
+  <header class="cabecera">
+    <div class="marca">
+      <span class="logo" aria-hidden="true">🍇</span>
+      <div>
+        <h1 data-t="titulo_app">Campaña Vila-rodona</h1>
+        <p class="sub" data-t="subtitulo_app">La cosecha del pueblo, organizada</p>
+      </div>
+    </div>
+    <div class="controles">
+      <label class="ctrl">
+        <span data-t="idioma">Idioma</span>
+        <select id="sel-idioma" aria-label="Idioma"></select>
+      </label>
+      <div class="ctrl" role="group" aria-label="Tamaño del texto">
+        <span data-t="tamano_texto">Texto</span>
+        <button id="txt-menos" class="btn-mini" aria-label="Texto más pequeño">A−</button>
+        <button id="txt-mas" class="btn-mini" aria-label="Texto más grande">A+</button>
+      </div>
+    </div>
+  </header>
+
+  <div class="aviso-demo">🧪 <span data-t="datos_simulados">Prototipo con datos simulados</span> · Vila-rodona (Alt Camp) · <span id="fecha-hoy"></span></div>
+
+  <nav class="nav" id="nav" aria-label="Secciones">
+    <a href="#inicio"     data-t="nav_inicio">Inicio</a>
+    <a href="#calendario" data-t="nav_calendario">Calendario</a>
+    <a href="#mapa"       data-t="nav_mapa">Mapa</a>
+    <a href="#trabajo"    data-t="nav_trabajo">Trabajo</a>
+    <a href="#pueblo"     data-t="nav_pueblo">Pueblo</a>
+    <a href="#comprar"    data-t="nav_comprar">Comprar</a>
+    <a href="#tramites"   data-t="nav_tramites">Trámites</a>
+  </nav>
+
+  <main id="vista" tabindex="-1"><p class="cargando">Cargando…</p></main>
+
+  <footer class="pie">
+    Prototipo de concurso · Datos ficticios marcados “(ejemplo)” · En producción: Google Maps, Business Profile, Weather API y Vertex AI.
+  </footer>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script type="module" src="frontend/js/main.js"></script>
+</body>
+</html>
