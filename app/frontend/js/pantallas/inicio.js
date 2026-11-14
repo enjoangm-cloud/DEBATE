@@ -1,6 +1,9 @@
 // Inicio: qué es la red, quién la usa y cómo está la temporada hoy
-import { getRed, getIndicadores, getAlertas, getSectores } from '../../../backend/api.js';
-import { t, esc, estado, fuente, filtroPueblo, nombrePueblo } from '../util.js';
+import { getRed, getIndicadores, getAlertas, getSectores, getPueblos, getCalendario, getRutas, getPueblo } from '../../../backend/api.js';
+import { lineaTiempo } from './calendario.js';
+import { t, esc, estado, fuente, filtroPueblo, nombrePueblo, colorSeguro } from '../util.js';
+
+let mapa = null; // mapa de la vista rápida (solo en el móvil)
 
 // Rol → pantalla a la que lleva
 const ROLES = [
@@ -13,13 +16,21 @@ const ROLES = [
 
 export default {
   async html() {
-    const [red, ind, alertas, sectores] = await Promise.all([
-      getRed(), getIndicadores(filtroPueblo()), getAlertas(filtroPueblo()), getSectores()]);
+    const [red, ind, alertas, sectores, pueblos, cal] = await Promise.all([
+      getRed(), getIndicadores(filtroPueblo()), getAlertas(filtroPueblo()), getSectores(), getPueblos(), getCalendario(filtroPueblo())]);
     const total = red.pueblos.reduce((s, p) => s + p.habitantes, 0);
     const alerta = alertas[0];
     const ambito = estado.pueblo === 'red' ? 'toda la red' : nombrePueblo(red.pueblos, estado.pueblo);
 
     return `
+      <section class="vista-rapida" aria-label="La red de un vistazo">
+        <h2>📍 ${esc(red.nombre)}</h2>
+        <div id="mapa-inicio" class="mapa-inicio" role="region" aria-label="Mapa de la red de pueblos"></div>
+        <h3 class="seccion-mini">📅 ${esc(t('nav_calendario', 'Calendario'))} · ${esc(t('hoy', 'Hoy'))}</h3>
+        ${lineaTiempo(cal, pueblos, estado.pueblo === 'red')}
+        <p><a href="#calendario">${esc(t('nav_calendario', 'Calendario'))} →</a> · <a href="#mapa">${esc(t('nav_mapa', 'Mapa'))} →</a></p>
+      </section>
+
       <section class="hero">
         <h2>${esc(red.nombre)}</h2>
         <p style="font-size:1.15rem">${red.pueblos.length} pueblos del Alt Camp
@@ -66,10 +77,31 @@ export default {
       </section>`;
   },
 
-  activar(raiz) {
+  async activar(raiz) {
     raiz.querySelectorAll('[data-rol]').forEach(b => b.onclick = () => {
       estado.rol = b.dataset.rol;
       location.hash = b.dataset.destino;
     });
+    // Mapa de la vista rápida: solo si se ve (pantallas estrechas)
+    const caja = raiz.querySelector('#mapa-inicio');
+    if (mapa) { mapa.remove(); mapa = null; }
+    if (!caja || caja.offsetParent === null) return;
+    if (!window.L) { caja.textContent = 'No se pudo cargar el mapa.'; return; }
+    const fp = filtroPueblo();
+    const [red, rutas] = await Promise.all([getRed(), getRutas(fp)]);
+    const centro = fp ? await getPueblo(fp) : red.centro;
+    mapa = L.map(caja, { scrollWheelZoom: false, dragging: !L.Browser.mobile, tap: false })
+      .setView([centro.lat, centro.lng], fp ? 13 : (centro.zoom || 12) - 1);
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19, attribution: '© OpenStreetMap · prototipo (producción: Google Maps)',
+    }).addTo(mapa);
+    for (const r of rutas) {
+      L.polyline(r.puntos, { color: colorSeguro(r.color, '#1f5c99'), weight: 4, opacity: .8, dashArray: r.tipo === 'cosechas' ? '8 8' : null }).addTo(mapa);
+    }
+    for (const p of red.pueblos) {
+      if (fp && p.id !== fp) continue;
+      L.marker([p.lat, p.lng], { icon: L.divIcon({ className: '', html: `<div class="pin-pueblo">${esc(p.nombre)}</div>`, iconSize: null }), interactive: false }).addTo(mapa);
+    }
+    setTimeout(() => mapa?.invalidateSize(), 100);
   },
 };

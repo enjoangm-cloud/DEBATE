@@ -12,6 +12,32 @@ const pctAnyo = (iso) => {
   return Math.min(100, Math.max(0, ((d - ini) / (fin - ini)) * 100));
 };
 
+const INICIAL = ['E', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O', 'N', 'D'];
+
+// Línea del año con la marca de hoy. En el móvil cabe entera, sin deslizar (ver styles.css)
+export function lineaTiempo(cal, pueblos, red) {
+  const cultivos = pueblos.flatMap(p => p.cultivos);
+  const color = (id) => colorSeguro(cultivos.find(c => c.id === id)?.color);
+  const emoji = (id) => cultivos.find(c => c.id === id)?.emoji || '🌱';
+  const np = (id) => nombrePueblo(pueblos, id);
+  const enEsteAnyo = cal.filter(c => c.inicio.startsWith(String(ANYO)));
+  const hoy = pctAnyo(HOY);
+  return `
+      <div class="timeline">
+        <div class="tl-fila tl-marca"><div></div><div class="tl-pista-hoy"><span class="tl-hoy-txt" style="left:${hoy}%">${esc(t('hoy', 'Hoy'))} · ${fechaCorta(HOY)}</span></div></div>
+        <div class="tl-meses"><div></div>${MESES.map((m, i) => `<div><span class="m-larga">${m}</span><span class="m-corta">${INICIAL[i]}</span></div>`).join('')}</div>
+        ${enEsteAnyo.map(c => `
+          <div class="tl-fila">
+            <div class="tl-nombre">${emoji(c.cultivoId)} ${esc(c.nombre)}${red ? `<br><span class="muted tl-pueblo">${esc(np(c.puebloId))}</span>` : ''}</div>
+            <div class="tl-pista">
+              <div class="tl-barra" style="left:${pctAnyo(c.inicio)}%;width:${Math.max(2, pctAnyo(c.fin) - pctAnyo(c.inicio))}%;background:${color(c.cultivoId)}">
+                <span class="tl-fechas">${fechaCorta(c.inicio)}–${fechaCorta(c.fin)}</span></div>
+              <div class="tl-hoy" style="left:${hoy}%" title="${esc(t('hoy', 'Hoy'))}"></div>
+            </div>
+          </div>`).join('')}
+      </div>`;
+}
+
 const ESTADO = { en_curso: ['en_curso', 'En curso', ''], terminado: ['terminado', 'Terminado', 'gris'], proximo: ['proximo', 'Próximo', 'ambar'] };
 
 export default {
@@ -24,25 +50,12 @@ export default {
     const emoji = (id) => cultivos.find(c => c.id === id)?.emoji || '🌱';
     const np = (id) => nombrePueblo(pueblos, id);
     const red = estado.pueblo === 'red';
-    // Las tareas del año siguiente (p. ej. poda de enero) no caben en la línea de este año: van solo en tarjetas
-    const enEsteAnyo = cal.filter(c => c.inicio.startsWith(String(ANYO)));
 
     return `
       <h2>📅 ${esc(t('nav_calendario', 'Calendario'))}</h2>
       <p class="muted">Cuándo se recoge cada cultivo ${red ? 'en la red' : 'en ' + esc(np(fp))} y cuánta gente hace falta. La línea roja es hoy.</p>
 
-      <div class="timeline">
-        <div class="tl-meses"><div></div>${MESES.map(m => `<div>${m}</div>`).join('')}</div>
-        ${enEsteAnyo.map(c => `
-          <div class="tl-fila">
-            <div class="tl-nombre">${emoji(c.cultivoId)} ${esc(c.nombre)}${red ? `<br><span class="muted" style="font-weight:400;font-size:.8rem">${esc(np(c.puebloId))}</span>` : ''}</div>
-            <div class="tl-pista">
-              <div class="tl-barra" style="left:${pctAnyo(c.inicio)}%;width:${Math.max(2, pctAnyo(c.fin) - pctAnyo(c.inicio))}%;background:${color(c.cultivoId)}">
-                ${fechaCorta(c.inicio)}–${fechaCorta(c.fin)}</div>
-              <div class="tl-hoy" style="left:${pctAnyo(HOY)}%" title="Hoy"></div>
-            </div>
-          </div>`).join('')}
-      </div>
+      ${lineaTiempo(cal, pueblos, red)}
       ${fuente('getCalendario')}
 
       <div class="rejilla seccion">
