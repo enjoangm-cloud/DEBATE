@@ -5,6 +5,8 @@ Reto de un concurso de ideas (zona Madrid): usar servicios de Google para resolv
 pueblos de **menos de 5.000 habitantes**. Nuestra idea: una **red de pueblos** que organiza el **trabajo de
 temporada todo el año** (campo, turismo rural, hostelería, bodega, forestal) uniendo temporeros, empleadores,
 ayuntamientos, visitantes y compradores.
+Escala: **una plataforma, muchas redes** en toda España (5 tipos: agrícola, nieve/montaña, ganadera, forestal, olivar),
+**corredor de temporadas** de 12 meses y **ruta de arraigo para jóvenes** (probar → año completo → quedarse).
 Nombre del producto: **pendiente** (provisional "Temporada del Gaià").
 
 ## Demo

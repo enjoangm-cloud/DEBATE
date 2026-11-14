@@ -43,7 +43,7 @@ const sel = document.getElementById('sel-pueblo');
 const pueblos = [...sel.options].map(o => o.value);
 for (const p of pueblos) {
   sel.value = p; sel.dispatchEvent(new window.Event('change')); await espera(900);
-  for (const h of ['inicio', 'calendario', 'mapa', 'trabajo', 'red', 'turismo', 'pueblo', 'tramites']) { await ir(h); revisar(`${p}/${h}`); }
+  for (const h of ['inicio', 'espana', 'jovenes', 'calendario', 'mapa', 'trabajo', 'red', 'turismo', 'pueblo', 'tramites']) { await ir(h); revisar(`${p}/${h}`); }
 }
 sel.value = 'red'; sel.dispatchEvent(new window.Event('change')); await espera(900);
 
@@ -63,6 +63,18 @@ const fExp = vista().querySelector('form[data-exp] button:not([disabled])')?.clo
 if (fExp) { fExp.dispatchEvent(new window.Event('submit', { cancelable: true })); await espera(1200); console.log('  experiencia →', toast()); } else errores.push('turismo: sin experiencia reservable');
 const fCompra = vista().querySelector('form[data-empleador]');
 if (fCompra) { fCompra.querySelector('input[type=number]').value = '1'; fCompra.dispatchEvent(new window.Event('submit', { cancelable: true })); await espera(1200); console.log('  compra →', toast()); } else errores.push('turismo: sin compra directa');
+
+await ir('jovenes');
+const test = vista().querySelector('#test');
+if (test) {
+  test.querySelectorAll('fieldset').forEach(fs => { const r = fs.querySelectorAll('input[type=radio]'); r[r.length - 1].checked = true; });
+  test.dispatchEvent(new window.Event('submit', { cancelable: true })); await espera(1200); revisar('test jóvenes');
+  console.log('  test jóvenes →', vista().querySelector('.ia')?.textContent?.slice(0, 80) || 'SIN RESULTADO');
+  if (!vista().querySelector('.ia')) errores.push('test jóvenes: sin recomendación');
+} else errores.push('jóvenes: no encuentro el test');
+const fOp = vista().querySelector('form[data-op] button:not([disabled])')?.closest('form');
+if (fOp) { fOp.elements.nombre.value = 'Laia'; fOp.dispatchEvent(new window.Event('submit', { cancelable: true })); await espera(1200); console.log('  apuntarse →', toast()); }
+else errores.push('jóvenes: sin oportunidad para apuntarse');
 
 // Idiomas (árabe = derecha a izquierda)
 const selI = document.getElementById('sel-idioma');

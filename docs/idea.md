@@ -38,3 +38,23 @@ Montferri (473), Bràfim (696) y Vilabella (723). Es una **plantilla**: sirve pa
 | 7 | Recursos | Web, APIs de Google, dinamizador de la red, bolsa de viviendas y empleadores |
 | 8 | Costes | Desarrollo, sueldo del dinamizador (repartido entre los pueblos), uso de APIs (bajo en piloto) |
 | 9 | Ingresos | Cuota anual de cada ayuntamiento según habitantes · cuota pequeña por temporada del empleador · comisión baja en venta directa y experiencias · **el temporero nunca paga** |
+
+## Escala España (v3)
+**Una plataforma, muchas redes.** Cada comarca de pueblos < 5.000 hab. crea su red con la misma app.
+Hay 6.329 municipios así en España (77,8 % del total, ~9 % de la población · MAPA 2025).
+
+| Tipo de red | Oficios | Ejemplo |
+|---|---|---|
+| Agrícola + turismo rural | cosecha, poda, bodega, casas rurales | Red del Gaià (demo completa) |
+| Nieve y montaña | remontes, hostelería, monitores; verano: montaña | Valle de Tena, Huesca (ejemplo) |
+| Ganadera | pastoreo, ordeño, quesería, esquileo | Tajo-Salor-Almonte, Cáceres (ejemplo) |
+| Forestal | resina, prevención de incendios | Tierra de Pinares, Segovia (ejemplo) |
+| Olivar | aceituna, poda, almazara | Sierra Mágina, Jaén (ejemplo) |
+
+**Corredor de temporadas:** una persona encadena redes y trabaja 12 meses (nieve → esquileo → resina → vendimia → oliva).
+
+**Ruta de arraigo para jóvenes:**
+1. **Probar** (1–3 meses): prácticas Campus Rural (1.000 €/mes) o primera temporada con vivienda del empleador.
+2. **Año completo:** trabajo encadenado en la red + formación (escuela de pastores, poda, montaña).
+3. **Quedarse:** vivienda estable de la bolsa, **relevo** de explotaciones y negocios sin sucesor, emprender.
+Por qué: menos del 9 % de los titulares agrarios tienen menos de 41 años y ~41 % tienen 65 o más (Censo Agrario 2020).

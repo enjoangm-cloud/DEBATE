@@ -1,4 +1,4 @@
-// Prueba del backend simulado contra docs/contrato-api.md (v2). Uso: node scripts/probar-backend.mjs
+// Prueba del backend simulado contra docs/contrato-api.md (v2 + v3). Uso: node scripts/probar-backend.mjs
 import * as api from '../app/backend/api.js';
 
 let fallos = 0;
@@ -402,6 +402,138 @@ alojs2.forEach((a) => ok(a.modalidad === 'propio' || viv2.find((v) => v.id === a
 // Copias: modificar lo devuelto no altera el estado
 const e1 = await api.getEmpleadores(); e1[0].nombre = 'X';
 ok((await api.getEmpleadores())[0].nombre !== 'X', 'devuelve copias');
+
+
+// ================= v3 · España entera, más sectores y jóvenes =================
+{ // ámbito propio de v3 (sin chocar con nombres de v2)
+const F3 = ['getEspana', 'getCorredor', 'getJovenes', 'getOportunidadesJovenes', 'recomendarRed', 'apuntarseOportunidad'];
+F3.forEach((f) => { ok(typeof api[f] === 'function', `v3: falta función ${f}`); ok(api.FUENTES?.[f], `v3: FUENTES.${f}`); });
+
+const esp = await api.getEspana();
+campos(esp, ['municipiosPequenos', 'pctMunicipios', 'pctPoblacion', 'fuente', 'redes', 'arquetipos', 'comoCrearRed'], 'getEspana');
+ok(esp.municipiosPequenos === 6329 && esp.pctMunicipios === 77.8 && esp.pctPoblacion === 9, 'v3: cifras reales MAPA');
+ok(esp.fuente === 'MAPA, Informe Anual de Indicadores 2025', 'v3: fuente MAPA');
+ok(esp.comoCrearRed.length >= 6 && esp.comoCrearRed.length <= 7, 'v3: comoCrearRed 6–7 pasos');
+lista(esp.arquetipos, ['id', 'nombre', 'emoji', 'color', 'sectores', 'ejemploRedId', 'problema', 'comoAyuda'], 'arquetipos');
+lista(esp.redes, ['id', 'nombre', 'provincia', 'comunidad', 'arquetipoId', 'lat', 'lng', 'esDemo', 'sectores', 'temporadas', 'pueblosEjemplo', 'destacado'], 'redesEspana');
+const RID = new Set(esp.redes.map((r) => r.id));
+const AID = new Set(esp.arquetipos.map((a) => a.id));
+const TABLA = { 'red-gaia': ['Red del Gaià', 'Tarragona', 41.30, 1.35], 'red-tena': ['Valle de Tena (ejemplo)', 'Huesca', 42.76, -0.33],
+  'red-tajo-salor': ['Tajo-Salor-Almonte (ejemplo)', 'Cáceres', 39.56, -6.42], 'red-pinares': ['Tierra de Pinares (ejemplo)', 'Segovia', 41.20, -4.43],
+  'red-magina': ['Sierra Mágina (ejemplo)', 'Jaén', 37.80, -3.40] };
+ok(esp.redes.length === 5 && Object.keys(TABLA).every((id) => RID.has(id)), 'v3: 5 redes del contrato');
+for (const r of esp.redes) {
+  const t = TABLA[r.id];
+  ok(t && r.nombre === t[0] && r.provincia === t[1] && r.lat === t[2] && r.lng === t[3], `v3: datos de la red ${r.id}`);
+  ok(AID.has(r.arquetipoId), `v3: arquetipoId de ${r.id}`);
+  ok(r.esDemo === (r.id === 'red-gaia'), `v3: esDemo ${r.id}`);
+  lista(r.temporadas, ['mesInicio', 'mesFin', 'texto'], `temporadas ${r.id}`);
+  r.temporadas.forEach((x) => ok(x.mesInicio >= 1 && x.mesInicio <= 12 && x.mesFin >= 1 && x.mesFin <= 12, `v3: meses de ${r.id}`));
+}
+esp.arquetipos.forEach((a) => ok(RID.has(a.ejemploRedId) && esp.redes.find((r) => r.id === a.ejemploRedId).arquetipoId === a.id, `v3: ejemploRedId de ${a.id}`));
+ok(JSON.stringify(esp.redes.find((r) => r.id === 'red-gaia').pueblosEjemplo) === JSON.stringify(pueblos.map((p) => p.nombre)), 'v3: pueblos del Gaià = los de v2');
+ok(JSON.stringify(esp.redes.find((r) => r.id === 'red-tena').pueblosEjemplo) === '["Sallent de Gállego","Panticosa"]', 'v3: Tena solo Sallent y Panticosa');
+['red-tajo-salor', 'red-pinares', 'red-magina'].forEach((id) => ok(esp.redes.find((r) => r.id === id).pueblosEjemplo.length === 0, `v3: ${id} sin pueblos inventados`));
+// Temporadas fuertes del contrato
+const tiene = (id, i, f) => esp.redes.find((r) => r.id === id).temporadas.some((x) => x.mesInicio === i && x.mesFin === f);
+ok(tiene('red-tena', 12, 4) && tiene('red-tena', 7, 8), 'v3: temporadas Tena');
+ok(tiene('red-tajo-salor', 1, 12) && tiene('red-tajo-salor', 3, 5) && tiene('red-tajo-salor', 5, 6), 'v3: temporadas Tajo-Salor');
+ok(tiene('red-pinares', 4, 10) && tiene('red-pinares', 11, 3), 'v3: temporadas Pinares');
+ok(tiene('red-magina', 11, 2) && tiene('red-magina', 3, 4), 'v3: temporadas Mágina');
+const mesesDe = (i, f) => { const m = []; for (let x = i; ; x = x % 12 + 1) { m.push(x); if (x === f) break; } return m; };
+const cubreGaia = new Set(esp.redes.find((r) => r.id === 'red-gaia').temporadas.flatMap((x) => mesesDe(x.mesInicio, x.mesFin)));
+ok(cubreGaia.size === 12, 'v3: Gaià todo el año');
+
+// Corredor: 12 meses exactamente una vez, consecutivos, dic → nov
+const cor = await api.getCorredor();
+campos(cor, ['titulo', 'persona', 'tramos', 'meses', 'nota'], 'corredor');
+ok(cor.meses === 12 && cor.persona === '(ejemplo)', 'v3: corredor meses/persona');
+lista(cor.tramos, ['mesInicio', 'mesFin', 'redId', 'sector', 'tarea', 'viviendaDe'], 'corredor.tramos');
+cor.tramos.forEach((t) => ok(RID.has(t.redId), `v3: redId del tramo ${t.redId}`));
+const cuenta = Array(13).fill(0);
+cor.tramos.forEach((t) => mesesDe(t.mesInicio, t.mesFin).forEach((m) => cuenta[m]++));
+ok(cuenta.slice(1).every((n) => n === 1), 'v3: corredor cubre cada mes exactamente una vez ' + cuenta.slice(1));
+ok(cor.tramos[0].mesInicio === 12 && cor.tramos.at(-1).mesFin === 11, 'v3: corredor dic → nov');
+cor.tramos.slice(1).forEach((t, i) => ok(t.mesInicio === cor.tramos[i].mesFin % 12 + 1, `v3: tramo ${i + 1} consecutivo`));
+ok(JSON.stringify(cor.tramos.map((t) => t.redId)) === '["red-tena","red-tajo-salor","red-pinares","red-gaia","red-gaia"]', 'v3: orden de redes del corredor');
+
+// Jóvenes
+const jov = await api.getJovenes();
+campos(jov, ['datos', 'pasos', 'preguntas'], 'getJovenes');
+lista(jov.datos, ['cifra', 'texto', 'fuente'], 'jovenes.datos');
+lista(jov.pasos, ['id', 'titulo', 'duracion', 'queOfrece', 'quienPaga'], 'jovenes.pasos');
+ok(jov.pasos.map((p) => p.id).join() === 'probar,anyo,quedarse', 'v3: pasos probar/anyo/quedarse');
+ok(jov.preguntas.length === 3, 'v3: 3 preguntas');
+lista(jov.preguntas, ['id', 'texto', 'opciones'], 'preguntas');
+const OPC = new Set();
+jov.preguntas.forEach((p) => { lista(p.opciones, ['id', 'texto', 'arquetipos'], `opciones ${p.id}`);
+  p.opciones.forEach((o) => { ok(!OPC.has(o.id), `v3: opción repetida ${o.id}`); OPC.add(o.id); o.arquetipos.forEach((a) => ok(AID.has(a), `v3: arquetipo ${a} en ${o.id}`)); }); });
+const opsJ = await api.getOportunidadesJovenes();
+lista(opsJ, ['id', 'tipo', 'titulo', 'redId', 'puebloId', 'descripcion', 'duracion', 'condiciones', 'plazas'], 'oportunidades');
+ok(opsJ.length >= 10 && opsJ.length <= 14, 'v3: 10–14 oportunidades');
+const TIPOS = ['practicas', 'primera_temporada', 'formacion', 'relevo', 'vivienda_estable', 'emprender'];
+TIPOS.forEach((t) => ok(opsJ.some((o) => o.tipo === t), `v3: hay oportunidad de tipo ${t}`));
+RID.forEach((r) => ok(opsJ.some((o) => o.redId === r), `v3: hay oportunidades en ${r}`));
+for (const o of opsJ) {
+  ok(TIPOS.includes(o.tipo) && RID.has(o.redId), `v3: tipo/redId de ${o.id}`);
+  ok(o.redId === 'red-gaia' ? PID.has(o.puebloId) : o.puebloId === null, `v3: puebloId de ${o.id}`);
+  ok(o.titulo.includes('(ejemplo)'), `v3: ${o.id} marcado (ejemplo)`);
+  ok(Number.isInteger(o.plazas) && o.plazas > 0, `v3: plazas ${o.id}`);
+  if (o.tipo === 'practicas') ok(['Programa Campus Rural', '1.000 € brutos/mes', '~3 meses', 'Municipios < 5.000 hab.'].every((c) => o.condiciones.includes(c)), `v3: condiciones Campus Rural ${o.id}`);
+}
+ok(opsJ.some((o) => o.tipo === 'relevo' && o.puebloId === 'vilabella' && /almendro/.test(o.titulo)), 'v3: relevo finca de almendros en Vilabella');
+const opsOv = await api.getOportunidadesJovenes('ganaderia-ovina');
+ok(opsOv.length > 0 && opsOv.every((o) => o.redId === 'red-tajo-salor'), 'v3: filtro por arquetipo');
+ok((await api.getOportunidadesJovenes('xx')).length === 0, 'v3: arquetipo desconocido → lista vacía');
+
+// recomendarRed: varias combinaciones
+const rec = async (r) => api.recomendarRed(r);
+const r1 = await rec({ 'p-paisaje': 'paisaje-montana', 'p-trabajo': 'trabajo-gente', 'p-cuando': 'cuando-invierno' });
+ok(r1.ok && r1.arquetipoId === 'nieve-montana' && r1.redId === 'red-tena', 'v3: recomendar nieve ' + JSON.stringify(r1));
+campos(r1, ['ok', 'arquetipoId', 'redId', 'motivo', 'oportunidades'], 'recomendarRed');
+const r2 = await rec({ 'p-paisaje': 'paisaje-dehesa', 'p-trabajo': 'trabajo-animales', 'p-cuando': 'cuando-primavera' });
+ok(r2.ok && r2.arquetipoId === 'ganaderia-ovina' && r2.redId === 'red-tajo-salor', 'v3: recomendar ovino');
+const r3 = await rec({ 'p-paisaje': 'paisaje-bosque', 'p-trabajo': 'trabajo-arboles', 'p-cuando': 'cuando-verano' });
+ok(r3.ok && r3.arquetipoId === 'forestal-resina' && r3.redId === 'red-pinares', 'v3: recomendar forestal');
+const r4 = await rec({ 'p-paisaje': 'paisaje-vinas', 'p-trabajo': 'trabajo-arboles', 'p-cuando': 'cuando-invierno' });
+ok(r4.ok && r4.arquetipoId === 'olivar' && r4.redId === 'red-magina', 'v3: recomendar olivar');
+const r5 = await rec({ 'p-paisaje': 'paisaje-vinas', 'p-trabajo': 'trabajo-variado', 'p-cuando': 'cuando-otono' });
+ok(r5.ok && r5.arquetipoId === 'agricola-turismo' && r5.redId === 'red-gaia', 'v3: recomendar agrícola');
+const r6 = await rec({ 'p-paisaje': 'paisaje-montana', 'p-trabajo': 'trabajo-animales' }); // empate 1–1
+ok(r6.ok && r6.redId === 'red-gaia', 'v3: empate → Gaià');
+ok((await rec({})).redId === 'red-gaia', 'v3: sin respuestas → Gaià');
+for (const r of [r1, r2, r3, r4, r5, r6]) {
+  ok(AID.has(r.arquetipoId) && RID.has(r.redId) && r.motivo && r.oportunidades.length > 0, 'v3: recomendación válida');
+  r.oportunidades.forEach((id) => ok(opsJ.find((o) => o.id === id)?.redId === r.redId, `v3: oportunidad ${id} de la red recomendada`));
+}
+for (const malo of [null, undefined, 'x', 42, [], { 'p-paisaje': 'nada' }, { 'p-xx': 'paisaje-montana' }, { 'p-paisaje': 'trabajo-gente' }]) {
+  let res; try { res = await rec(malo); } catch (e) { res = { roto: e.message }; }
+  ok(res && !res.roto && (res.ok === false ? !!res.error : res.redId === 'red-gaia'), 'v3: respuesta inválida sin romper ' + JSON.stringify(malo));
+}
+
+// apuntarseOportunidad
+const plazasBar = opsJ.find((o) => o.id === 'op-relevo-bar-montferri').plazas;
+const ap = await api.apuntarseOportunidad('op-practicas-vila-rodona', 'Persona (ejemplo)');
+ok(ap.ok && ap.codigo, 'v3: apuntarse ok ' + JSON.stringify(ap));
+ok((await api.getOportunidadesJovenes()).find((o) => o.id === 'op-practicas-vila-rodona').plazas === opsJ.find((o) => o.id === 'op-practicas-vila-rodona').plazas - 1, 'v3: baja plazas');
+for (let i = 0; i < plazasBar; i++) ok((await api.apuntarseOportunidad('op-relevo-bar-montferri', `Persona ${i}`)).ok, 'v3: apuntarse hasta llenar');
+const sinPl = await api.apuntarseOportunidad('op-relevo-bar-montferri', 'Otra persona');
+ok(!sinPl.ok && sinPl.error, 'v3: error sin plazas');
+ok((await api.getOportunidadesJovenes()).find((o) => o.id === 'op-relevo-bar-montferri').plazas === 0, 'v3: plazas no bajan de 0');
+for (const n of ['', '   ', null, undefined, 'a'.repeat(61)]) ok(!(await api.apuntarseOportunidad('op-formacion-pastores', n)).ok, `v3: nombre inválido (${String(n).length})`);
+ok((await api.apuntarseOportunidad('op-formacion-pastores', 'a'.repeat(60))).ok, 'v3: nombre de 60 caracteres vale');
+ok(!(await api.apuntarseOportunidad('op-xx', 'Ana')).ok, 'v3: oportunidad inexistente');
+const cj = await api.getJovenes(); cj.datos[0].cifra = 'X';
+ok((await api.getJovenes()).datos[0].cifra !== 'X', 'v3: devuelve copias');
+
+// Textos v3 en 6 idiomas (traducidos de verdad)
+const V3 = 'nav_espana nav_jovenes arquetipo corredor ruta_arraigo probar anyo_completo quedarse apuntarme recomendar oportunidades relevo practicas'.split(' ');
+for (const { codigo } of idiomas) {
+  const t = await api.getTextos(codigo);
+  V3.forEach((k) => ok(typeof t[k] === 'string' && t[k].trim(), `v3: texto ${codigo}.${k}`));
+  if (codigo !== 'es') { const ig = V3.filter((k) => t[k] === es[k]); ok(ig.length <= 2, `v3: textos ${codigo} sin traducir (${ig})`); }
+}
+} // fin v3
 
 console.log(fallos ? `\n${fallos} FALLOS` : '\nTODO OK');
 process.exit(fallos ? 1 : 0);

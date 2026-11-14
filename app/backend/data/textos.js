@@ -15,6 +15,8 @@
 //  v2:        nav_red, nav_turismo, pueblo, red, todos, sector, sector_agricultura, sector_turismo, sector_hosteleria,
 //              sector_bodega, sector_forestal, alojamiento_empleador, verificado, pendiente_verificar, alquilar,
 //              coste_temporero, ayuda_mutua, aceptar, camino_anual, meses_trabajo, reservar_experiencia, personas, fecha
+//  v3:        nav_espana, nav_jovenes, arquetipo, corredor, ruta_arraigo, probar, anyo_completo, quedarse, apuntarme,
+//              recomendar, oportunidades, relevo, practicas
 export const TEXTOS = {
   es: {
     nav_inicio: 'Inicio', nav_calendario: 'Calendario', nav_mapa: 'Mapa', nav_trabajo: 'Trabajo', nav_pueblo: 'Pueblo', nav_comprar: 'Comprar', nav_tramites: 'Trámites',
@@ -29,7 +31,9 @@ export const TEXTOS = {
     aviso_lluvia: 'Lluvia prevista', aviso_viento: 'Viento fuerte', parar_recogida: 'Se para la recogida', punto_acogida: 'Punto de acogida', cerrar: 'Cerrar', volver: 'Volver',
     ver_mapa: 'Ver en el mapa', propuesto_ia: 'Propuesta de la IA', decide_dinamizador: 'Decide el dinamizador', total: 'Total', codigo_reserva: 'Código de reserva', stock: 'Disponible',
     // v2
-    nav_red: "Red", nav_turismo: "Turismo", pueblo: "Pueblo", red: "Red de pueblos", todos: "Todos", sector: "Sector", sector_agricultura: "Agricultura", sector_turismo: "Turismo rural", sector_hosteleria: "Hostelería", sector_bodega: "Bodega", sector_forestal: "Forestal", alojamiento_empleador: "Alojamiento a cargo del empleador", verificado: "Verificado por el ayuntamiento", pendiente_verificar: "Pendiente de verificar", alquilar: "Alquilar", coste_temporero: "Coste para el temporero", ayuda_mutua: "Ayuda entre pueblos", aceptar: "Aceptar", camino_anual: "Tu año de trabajo", meses_trabajo: "Meses con trabajo", reservar_experiencia: "Reservar experiencia", personas: "Personas", fecha: "Fecha"
+    nav_red: "Red", nav_turismo: "Turismo", pueblo: "Pueblo", red: "Red de pueblos", todos: "Todos", sector: "Sector", sector_agricultura: "Agricultura", sector_turismo: "Turismo rural", sector_hosteleria: "Hostelería", sector_bodega: "Bodega", sector_forestal: "Forestal", alojamiento_empleador: "Alojamiento a cargo del empleador", verificado: "Verificado por el ayuntamiento", pendiente_verificar: "Pendiente de verificar", alquilar: "Alquilar", coste_temporero: "Coste para el temporero", ayuda_mutua: "Ayuda entre pueblos", aceptar: "Aceptar", camino_anual: "Tu año de trabajo", meses_trabajo: "Meses con trabajo", reservar_experiencia: "Reservar experiencia", personas: "Personas", fecha: "Fecha",
+    // v3
+    nav_espana: "España", nav_jovenes: "Jóvenes", arquetipo: "Tipo de red", corredor: "Corredor de temporadas", ruta_arraigo: "Ruta para quedarse", probar: "Probar", anyo_completo: "Año completo", quedarse: "Quedarse", apuntarme: "Apuntarme", recomendar: "Recomiéndame una red", oportunidades: "Oportunidades", relevo: "Relevo", practicas: "Prácticas"
   },
   ca: {
     nav_inicio: 'Inici', nav_calendario: 'Calendari', nav_mapa: 'Mapa', nav_trabajo: 'Feina', nav_pueblo: 'Poble', nav_comprar: 'Comprar', nav_tramites: 'Tràmits',
@@ -44,7 +48,9 @@ export const TEXTOS = {
     aviso_lluvia: 'Pluja prevista', aviso_viento: 'Vent fort', parar_recogida: "S'atura la collita", punto_acogida: "Punt d'acollida", cerrar: 'Tancar', volver: 'Tornar',
     ver_mapa: 'Veure al mapa', propuesto_ia: 'Proposta de la IA', decide_dinamizador: 'Decideix el dinamitzador', total: 'Total', codigo_reserva: 'Codi de reserva', stock: 'Disponible',
     // v2
-    nav_red: "Xarxa", nav_turismo: "Turisme", pueblo: "Poble", red: "Xarxa de pobles", todos: "Tots", sector: "Sector", sector_agricultura: "Agricultura", sector_turismo: "Turisme rural", sector_hosteleria: "Hostaleria", sector_bodega: "Celler", sector_forestal: "Forestal", alojamiento_empleador: "Allotjament a càrrec de l'empresa", verificado: "Verificat per l'ajuntament", pendiente_verificar: "Pendent de verificar", alquilar: "Llogar", coste_temporero: "Cost per al temporer", ayuda_mutua: "Ajuda entre pobles", aceptar: "Acceptar", camino_anual: "El teu any de feina", meses_trabajo: "Mesos amb feina", reservar_experiencia: "Reservar experiència", personas: "Persones", fecha: "Data"
+    nav_red: "Xarxa", nav_turismo: "Turisme", pueblo: "Poble", red: "Xarxa de pobles", todos: "Tots", sector: "Sector", sector_agricultura: "Agricultura", sector_turismo: "Turisme rural", sector_hosteleria: "Hostaleria", sector_bodega: "Celler", sector_forestal: "Forestal", alojamiento_empleador: "Allotjament a càrrec de l'empresa", verificado: "Verificat per l'ajuntament", pendiente_verificar: "Pendent de verificar", alquilar: "Llogar", coste_temporero: "Cost per al temporer", ayuda_mutua: "Ajuda entre pobles", aceptar: "Acceptar", camino_anual: "El teu any de feina", meses_trabajo: "Mesos amb feina", reservar_experiencia: "Reservar experiència", personas: "Persones", fecha: "Data",
+    // v3
+    nav_espana: "Espanya", nav_jovenes: "Joves", arquetipo: "Tipus de xarxa", corredor: "Corredor de temporades", ruta_arraigo: "Ruta per quedar-se", probar: "Provar", anyo_completo: "Any complet", quedarse: "Quedar-se", apuntarme: "Apuntar-me", recomendar: "Recomana'm una xarxa", oportunidades: "Oportunitats", relevo: "Relleu", practicas: "Pràctiques"
   },
   ro: {
     nav_inicio: 'Acasă', nav_calendario: 'Calendar', nav_mapa: 'Hartă', nav_trabajo: 'Muncă', nav_pueblo: 'Satul', nav_comprar: 'Cumpără', nav_tramites: 'Acte',
@@ -59,7 +65,9 @@ export const TEXTOS = {
     aviso_lluvia: 'Ploaie prevăzută', aviso_viento: 'Vânt puternic', parar_recogida: 'Se oprește culesul', punto_acogida: 'Punct de primire', cerrar: 'Închide', volver: 'Înapoi',
     ver_mapa: 'Vezi pe hartă', propuesto_ia: 'Propunere IA', decide_dinamizador: 'Decide coordonatorul', total: 'Total', codigo_reserva: 'Cod rezervare', stock: 'Disponibil',
     // v2
-    nav_red: "Rețea", nav_turismo: "Turism", pueblo: "Sat", red: "Rețeaua de sate", todos: "Toate", sector: "Sector", sector_agricultura: "Agricultură", sector_turismo: "Turism rural", sector_hosteleria: "Restaurante și baruri", sector_bodega: "Cramă", sector_forestal: "Silvicultură", alojamiento_empleador: "Cazare asigurată de angajator", verificado: "Verificat de primărie", pendiente_verificar: "În așteptarea verificării", alquilar: "Închiriază", coste_temporero: "Cost pentru lucrător", ayuda_mutua: "Ajutor între sate", aceptar: "Acceptă", camino_anual: "Anul tău de muncă", meses_trabajo: "Luni cu muncă", reservar_experiencia: "Rezervă experiența", personas: "Persoane", fecha: "Data"
+    nav_red: "Rețea", nav_turismo: "Turism", pueblo: "Sat", red: "Rețeaua de sate", todos: "Toate", sector: "Sector", sector_agricultura: "Agricultură", sector_turismo: "Turism rural", sector_hosteleria: "Restaurante și baruri", sector_bodega: "Cramă", sector_forestal: "Silvicultură", alojamiento_empleador: "Cazare asigurată de angajator", verificado: "Verificat de primărie", pendiente_verificar: "În așteptarea verificării", alquilar: "Închiriază", coste_temporero: "Cost pentru lucrător", ayuda_mutua: "Ajutor între sate", aceptar: "Acceptă", camino_anual: "Anul tău de muncă", meses_trabajo: "Luni cu muncă", reservar_experiencia: "Rezervă experiența", personas: "Persoane", fecha: "Data",
+    // v3
+    nav_espana: "Spania", nav_jovenes: "Tineri", arquetipo: "Tip de rețea", corredor: "Coridorul sezoanelor", ruta_arraigo: "Drumul ca să rămâi", probar: "Încearcă", anyo_completo: "Un an întreg", quedarse: "Rămâi", apuntarme: "Mă înscriu", recomendar: "Recomandă-mi o rețea", oportunidades: "Oportunități", relevo: "Preluare", practicas: "Stagiu de practică"
   },
   ar: {
     nav_inicio: 'الرئيسية', nav_calendario: 'التقويم', nav_mapa: 'الخريطة', nav_trabajo: 'العمل', nav_pueblo: 'القرية', nav_comprar: 'شراء', nav_tramites: 'الإجراءات',
@@ -74,7 +82,9 @@ export const TEXTOS = {
     aviso_lluvia: 'أمطار متوقعة', aviso_viento: 'رياح قوية', parar_recogida: 'يتوقف الجني', punto_acogida: 'نقطة الاستقبال', cerrar: 'إغلاق', volver: 'رجوع',
     ver_mapa: 'عرض على الخريطة', propuesto_ia: 'اقتراح الذكاء الاصطناعي', decide_dinamizador: 'القرار للمنسق', total: 'المجموع', codigo_reserva: 'رمز الحجز', stock: 'متوفر',
     // v2
-    nav_red: "الشبكة", nav_turismo: "السياحة", pueblo: "القرية", red: "شبكة القرى", todos: "الكل", sector: "القطاع", sector_agricultura: "الزراعة", sector_turismo: "السياحة الريفية", sector_hosteleria: "المطاعم والضيافة", sector_bodega: "معصرة النبيذ", sector_forestal: "أعمال الغابات", alojamiento_empleador: "السكن على حساب صاحب العمل", verificado: "تحققت منه البلدية", pendiente_verificar: "في انتظار التحقق", alquilar: "استئجار", coste_temporero: "التكلفة على العامل", ayuda_mutua: "التعاون بين القرى", aceptar: "قبول", camino_anual: "سنة عملك", meses_trabajo: "أشهر العمل", reservar_experiencia: "احجز التجربة", personas: "الأشخاص", fecha: "التاريخ"
+    nav_red: "الشبكة", nav_turismo: "السياحة", pueblo: "القرية", red: "شبكة القرى", todos: "الكل", sector: "القطاع", sector_agricultura: "الزراعة", sector_turismo: "السياحة الريفية", sector_hosteleria: "المطاعم والضيافة", sector_bodega: "معصرة النبيذ", sector_forestal: "أعمال الغابات", alojamiento_empleador: "السكن على حساب صاحب العمل", verificado: "تحققت منه البلدية", pendiente_verificar: "في انتظار التحقق", alquilar: "استئجار", coste_temporero: "التكلفة على العامل", ayuda_mutua: "التعاون بين القرى", aceptar: "قبول", camino_anual: "سنة عملك", meses_trabajo: "أشهر العمل", reservar_experiencia: "احجز التجربة", personas: "الأشخاص", fecha: "التاريخ",
+    // v3
+    nav_espana: "إسبانيا", nav_jovenes: "الشباب", arquetipo: "نوع الشبكة", corredor: "ممر المواسم", ruta_arraigo: "طريق الاستقرار", probar: "جرّب", anyo_completo: "سنة كاملة", quedarse: "ابقَ", apuntarme: "سجّلني", recomendar: "اقترح لي شبكة", oportunidades: "الفرص", relevo: "تسلّم المشروع", practicas: "تدريب عملي"
   },
   fr: {
     nav_inicio: 'Accueil', nav_calendario: 'Calendrier', nav_mapa: 'Carte', nav_trabajo: 'Travail', nav_pueblo: 'Village', nav_comprar: 'Acheter', nav_tramites: 'Démarches',
@@ -89,7 +99,9 @@ export const TEXTOS = {
     aviso_lluvia: 'Pluie prévue', aviso_viento: 'Vent fort', parar_recogida: 'La récolte s’arrête', punto_acogida: "Point d'accueil", cerrar: 'Fermer', volver: 'Retour',
     ver_mapa: 'Voir sur la carte', propuesto_ia: "Proposition de l'IA", decide_dinamizador: 'Le coordinateur décide', total: 'Total', codigo_reserva: 'Code de réservation', stock: 'Disponible',
     // v2
-    nav_red: "Réseau", nav_turismo: "Tourisme", pueblo: "Village", red: "Réseau de villages", todos: "Tous", sector: "Secteur", sector_agricultura: "Agriculture", sector_turismo: "Tourisme rural", sector_hosteleria: "Hôtellerie-restauration", sector_bodega: "Cave viticole", sector_forestal: "Travaux forestiers", alojamiento_empleador: "Logement à la charge de l'employeur", verificado: "Vérifié par la mairie", pendiente_verificar: "En attente de vérification", alquilar: "Louer", coste_temporero: "Coût pour le saisonnier", ayuda_mutua: "Entraide entre villages", aceptar: "Accepter", camino_anual: "Ton année de travail", meses_trabajo: "Mois avec du travail", reservar_experiencia: "Réserver l'expérience", personas: "Personnes", fecha: "Date"
+    nav_red: "Réseau", nav_turismo: "Tourisme", pueblo: "Village", red: "Réseau de villages", todos: "Tous", sector: "Secteur", sector_agricultura: "Agriculture", sector_turismo: "Tourisme rural", sector_hosteleria: "Hôtellerie-restauration", sector_bodega: "Cave viticole", sector_forestal: "Travaux forestiers", alojamiento_empleador: "Logement à la charge de l'employeur", verificado: "Vérifié par la mairie", pendiente_verificar: "En attente de vérification", alquilar: "Louer", coste_temporero: "Coût pour le saisonnier", ayuda_mutua: "Entraide entre villages", aceptar: "Accepter", camino_anual: "Ton année de travail", meses_trabajo: "Mois avec du travail", reservar_experiencia: "Réserver l'expérience", personas: "Personnes", fecha: "Date",
+    // v3
+    nav_espana: "Espagne", nav_jovenes: "Jeunes", arquetipo: "Type de réseau", corredor: "Corridor des saisons", ruta_arraigo: "Parcours pour rester", probar: "Essayer", anyo_completo: "Année complète", quedarse: "Rester", apuntarme: "Je m'inscris", recomendar: "Recommande-moi un réseau", oportunidades: "Opportunités", relevo: "Reprise", practicas: "Stage"
   },
   en: {
     nav_inicio: 'Home', nav_calendario: 'Calendar', nav_mapa: 'Map', nav_trabajo: 'Work', nav_pueblo: 'Village', nav_comprar: 'Buy', nav_tramites: 'Paperwork',
@@ -104,7 +116,9 @@ export const TEXTOS = {
     aviso_lluvia: 'Rain expected', aviso_viento: 'Strong wind', parar_recogida: 'Harvest paused', punto_acogida: 'Welcome point', cerrar: 'Close', volver: 'Back',
     ver_mapa: 'View on map', propuesto_ia: 'AI suggestion', decide_dinamizador: 'The coordinator decides', total: 'Total', codigo_reserva: 'Booking code', stock: 'Available',
     // v2
-    nav_red: "Network", nav_turismo: "Tourism", pueblo: "Village", red: "Village network", todos: "All", sector: "Sector", sector_agricultura: "Farming", sector_turismo: "Rural tourism", sector_hosteleria: "Hospitality", sector_bodega: "Winery", sector_forestal: "Forestry", alojamiento_empleador: "Housing paid by the employer", verificado: "Checked by the town council", pendiente_verificar: "Pending check", alquilar: "Rent", coste_temporero: "Cost to the worker", ayuda_mutua: "Help between villages", aceptar: "Accept", camino_anual: "Your year of work", meses_trabajo: "Months with work", reservar_experiencia: "Book experience", personas: "People", fecha: "Date"
+    nav_red: "Network", nav_turismo: "Tourism", pueblo: "Village", red: "Village network", todos: "All", sector: "Sector", sector_agricultura: "Farming", sector_turismo: "Rural tourism", sector_hosteleria: "Hospitality", sector_bodega: "Winery", sector_forestal: "Forestry", alojamiento_empleador: "Housing paid by the employer", verificado: "Checked by the town council", pendiente_verificar: "Pending check", alquilar: "Rent", coste_temporero: "Cost to the worker", ayuda_mutua: "Help between villages", aceptar: "Accept", camino_anual: "Your year of work", meses_trabajo: "Months with work", reservar_experiencia: "Book experience", personas: "People", fecha: "Date",
+    // v3
+    nav_espana: "Spain", nav_jovenes: "Young people", arquetipo: "Network type", corredor: "Season corridor", ruta_arraigo: "Path to stay", probar: "Try it", anyo_completo: "Full year", quedarse: "Stay", apuntarme: "Sign me up", recomendar: "Recommend a network", oportunidades: "Opportunities", relevo: "Takeover", practicas: "Internship"
   }
 };
 

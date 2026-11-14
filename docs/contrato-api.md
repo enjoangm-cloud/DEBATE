@@ -99,3 +99,45 @@ No inventar coordenadas de monumentos salvo el monasterio (aprox. indicada). El 
 
 ### Claves de texto nuevas (además de las de v1)
 `nav_red, nav_turismo, pueblo, red, todos, sector, sector_agricultura, sector_turismo, sector_hosteleria, sector_bodega, sector_forestal, alojamiento_empleador, verificado, pendiente_verificar, alquilar, coste_temporero, ayuda_mutua, aceptar, camino_anual, meses_trabajo, reservar_experiencia, personas, fecha`
+
+---
+
+# v3 · España entera, más sectores y jóvenes (se AÑADE a v2; nada de v2 cambia)
+
+## Idea
+- **Una plataforma, muchas redes.** España se organiza en **redes comarcales** de pueblos < 5.000 hab. (como la del Gaià).
+  Cada red elige su **arquetipo** según su economía y usa la misma app. El Gaià es la red de demostración completa;
+  las demás son **ejemplos de plantilla** (datos ilustrativos, marcados "(ejemplo)").
+- **Corredor nacional de temporadas:** una persona encadena temporadas de distintas redes y trabaja los 12 meses.
+- **Ruta de arraigo para jóvenes:** probar (1–3 meses) → año completo → quedarse (vivienda estable, relevo, emprender).
+
+## Datos reales que se pueden usar (no inventar otros)
+- España: 6.329 municipios < 5.000 hab. = 77,8 % de los municipios, ~9 % de la población (MAPA, 2025).
+- Campus Rural (MITECO + universidades públicas): prácticas de ~3 meses en municipios < 5.000 hab., 1.000 € brutos/mes; en 2025, 750 estudiantes de 44 universidades.
+- Relevo: < 9 % de titulares de explotaciones agrarias tienen menos de 41 años; ~41 % tienen 65 o más (Censo Agrario 2020).
+- Pastores de ovino y caprino: quedan entre 80.000 y 90.000 (estimaciones, 2026). 2026 = Año Internacional de los Pastizales y los Pastores (ONU).
+- Pirineo aragonés: falta de vivienda para trabajadores de temporada; Panticosa construye vivienda pública para ellos (programa "Más Vivienda, Mejor Turismo").
+
+## Redes de ejemplo (arquetipos). Centro aproximado para el mapa de España.
+| id | nombre | provincia | arquetipo | centro aprox. | temporada fuerte (meses) |
+|---|---|---|---|---|---|
+| `red-gaia` | Red del Gaià | Tarragona | agrícola + turismo rural | 41.30, 1.35 | todo el año (demo completa) |
+| `red-tena` | Valle de Tena (ejemplo) | Huesca | nieve y montaña | 42.76, -0.33 | dic–abr esquí; jul–ago montaña |
+| `red-tajo-salor` | Tajo-Salor-Almonte (ejemplo) | Cáceres | ganadería ovina y quesería | 39.56, -6.42 | todo el año; mar–may partos y queso; may–jun esquileo |
+| `red-pinares` | Tierra de Pinares (ejemplo) | Segovia | forestal y resina | 41.20, -4.43 | abr–oct resina; nov–mar trabajos forestales |
+| `red-magina` | Sierra Mágina (ejemplo) | Jaén | olivar | 37.80, -3.40 | nov–feb aceituna; mar–abr poda |
+No dar cifras de habitantes ni nombres de pueblos de las redes de ejemplo salvo los citados aquí (Sallent de Gállego y Panticosa en Tena).
+
+## Funciones nuevas en `api.js`
+| Función | Devuelve |
+|---|---|
+| `getEspana()` | `{ municipiosPequenos:6329, pctMunicipios:77.8, pctPoblacion:9, fuente:'MAPA, Informe Anual de Indicadores 2025', redes:[RedEspana], arquetipos:[{id, nombre, emoji, color, sectores:[texto], ejemploRedId, problema, comoAyuda}], comoCrearRed:[texto] }` (6–7 pasos para crear una red nueva en cualquier comarca) |
+| RedEspana | `{ id, nombre, provincia, comunidad, arquetipoId, lat, lng, esDemo:boolean, sectores:[texto], temporadas:[{ mesInicio:1..12, mesFin:1..12, texto }], pueblosEjemplo:[texto], destacado }` |
+| `getCorredor()` | `{ titulo, persona:'(ejemplo)', tramos:[{ mesInicio, mesFin, redId, sector, tarea, viviendaDe:'empleador'\|'estación'\|... }], meses:12, nota }` — ruta de ejemplo de 12 meses: dic–abr nieve (Tena) → may–jun esquileo/queso (Tajo-Salor) → jul–ago resina (Pinares) → sep–oct vendimia (Gaià) → nov oliva (Gaià/Mágina). Meses consecutivos, sin huecos ni solapes, cubren 12 meses. |
+| `getJovenes()` | `{ datos:[{ cifra, texto, fuente }] (solo los reales de arriba), pasos:[{ id:'probar'\|'anyo'\|'quedarse', titulo, duracion, queOfrece:[texto], quienPaga:[texto] }], preguntas:[{ id, texto, opciones:[{ id, texto, arquetipos:[arquetipoId] }] }] (3 preguntas para recomendar una red) }` |
+| `getOportunidadesJovenes(arquetipoId?)` | `[{ id, tipo:'practicas'\|'primera_temporada'\|'formacion'\|'relevo'\|'vivienda_estable'\|'emprender', titulo, redId, puebloId\|null, descripcion, duracion, condiciones:[texto], plazas }]` 10–14, repartidas por redes y tipos. Prácticas = dentro del programa Campus Rural (1.000 €/mes, 3 meses). Relevo = negocios/explotaciones ficticias "(ejemplo)" cuyo dueño se jubila (rebaño, bar del pueblo, finca de almendros en Vilabella, quesería…). Formación = escuela de pastores, monitor de montaña, poda, resinación (genérico, sin inventar títulos oficiales). |
+| `recomendarRed(respuestas)` | `respuestas: { [preguntaId]: opcionId }` → `{ ok, arquetipoId, redId, motivo, oportunidades:[id] }` (cuenta votos de arquetipo; empate → la red del Gaià) |
+| `apuntarseOportunidad(id, nombre)` | `{ ok, codigo }`; error si sin plazas o nombre vacío/ > 60 caracteres; baja `plazas` |
+
+## Claves de texto nuevas (6 idiomas)
+`nav_espana, nav_jovenes, arquetipo, corredor, ruta_arraigo, probar, anyo_completo, quedarse, apuntarme, recomendar, oportunidades, relevo, practicas`

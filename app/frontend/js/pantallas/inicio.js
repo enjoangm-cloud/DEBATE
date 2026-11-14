@@ -8,6 +8,7 @@ const ROLES = [
   { id: 'agricultor',  ico: '🚜',  destino: 'pueblo',  texto: 'Contrato gente y les busco vivienda' },
   { id: 'dinamizador', ico: '🏛️', destino: 'red',     texto: 'Coordino la red de pueblos' },
   { id: 'comprador',   ico: '🧺',  destino: 'turismo', texto: 'Quiero visitar, vivir la cosecha y comprar directo' },
+  { id: 'joven',       ico: '🧑‍🎓', destino: 'jovenes', texto: 'Quiero probar a vivir y trabajar en un pueblo' },
 ];
 
 export default {
@@ -28,6 +29,10 @@ export default {
         <div class="fila" style="margin-top:.4rem">${sectores.map(s => `<span class="etiqueta gris">${esc(s.emoji)} ${esc(t('sector_' + s.id, s.nombre))}</span>`).join('')}</div>
         <p class="muted" style="margin-top:.8rem">🏠 <strong>La vivienda la pone quien contrata.</strong> El ayuntamiento la verifica. El temporero no paga nada.</p>
         <p class="muted">🤝 La app ayuda; <strong>decide una persona</strong>: ${esc(red.dinamizador.nombre)} · ${esc(red.dinamizador.telefono)}</p>
+        <div class="fila" style="margin-top:.8rem">
+          <a class="btn" href="#espana">🇪🇸 Llevarlo a toda España</a>
+          <a class="btn sec" href="#jovenes">🧑‍🎓 Soy joven y quiero probar</a>
+        </div>
       </section>
 
       ${alerta ? `

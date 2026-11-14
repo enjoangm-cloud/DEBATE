@@ -8,9 +8,11 @@ import trabajo from './pantallas/trabajo.js';
 import pueblo from './pantallas/pueblo.js';
 import red from './pantallas/red.js';
 import turismo from './pantallas/turismo.js';
+import espana from './pantallas/espana.js';
+import jovenes from './pantallas/jovenes.js';
 import tramites from './pantallas/tramites.js';
 
-const PANTALLAS = { inicio, calendario, mapa, trabajo, red, turismo, pueblo, tramites, comprar: turismo }; // 'comprar' = enlace antiguo
+const PANTALLAS = { inicio, espana, jovenes, calendario, mapa, trabajo, red, turismo, pueblo, tramites, comprar: turismo }; // 'comprar' = enlace antiguo
 const vista = document.getElementById('vista');
 
 // --- Preferencias guardadas en el navegador (si se puede) ---

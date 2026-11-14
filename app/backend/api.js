@@ -12,6 +12,9 @@ export { getExperiencias, reservarExperiencia } from './services/turismo.js';
 export { getEmparejamientosIA, getIdiomas, traducir, getTextos } from './services/vertex.js';
 export { getTramites } from './services/tramites.js';
 export { getIndicadores } from './services/indicadores.js';
+// v3 · España entera y jóvenes
+export { getEspana, getCorredor } from './services/espana.js';
+export { getJovenes, getOportunidadesJovenes, recomendarRed, apuntarseOportunidad } from './services/jovenes.js';
 
 // Fuente que usaría cada función en producción
 export const FUENTES = {
@@ -47,5 +50,12 @@ export const FUENTES = {
   getTextos: 'Vertex AI (Gemini) traducción',
   getTramites: 'Google Forms / Drive',
   reservarCompra: 'Google Business Profile',
-  getIndicadores: 'Cálculo propio sobre el estado de la red'
+  getIndicadores: 'Cálculo propio sobre el estado de la red',
+  // v3
+  getEspana: 'MAPA (Informe Anual de Indicadores 2025) + Google Maps Platform (mapa nacional de redes)',
+  getCorredor: 'Vertex AI (Gemini) encadena temporadas de varias redes + Google Maps (Routes API)',
+  getJovenes: 'MAPA, MITECO (Campus Rural), Censo Agrario 2020 + configuración de la app',
+  getOportunidadesJovenes: 'Base de datos propia de las redes + Google Business Profile (negocios)',
+  recomendarRed: 'Vertex AI (Gemini) propone una red; decide la persona joven con el dinamizador',
+  apuntarseOportunidad: 'Base de datos propia (inscripciones)'
 };
