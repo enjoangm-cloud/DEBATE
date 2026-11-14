@@ -19,15 +19,15 @@ export default {
               ${f.campanaDigna ? '<span class="etiqueta">✅ Campaña digna</span>' : ''}</div>
             <p class="muted">${esc(f.descripcion || '')}</p>
             <p>📦 Recogida: <strong>${esc(f.ventaDirecta.diasRecogida)}</strong></p>
-            <form data-finca="${f.id}">
+            <form data-finca="${esc(f.id)}">
               ${f.ventaDirecta.productos.map(pr => `
                 <label class="fila" style="justify-content:space-between;margin:.3rem 0">
                   <span>${esc(pr.nombre)} · <strong>${euros(pr.precio)}</strong>/${esc(pr.unidad)} <span class="muted">(${pr.stock} disp.)</span></span>
-                  <input type="number" min="0" max="${pr.stock}" value="0" name="${pr.id}" style="width:4.5rem" aria-label="Cantidad de ${esc(pr.nombre)}">
+                  <input type="number" min="0" max="${esc(pr.stock)}" value="0" name="${esc(pr.id)}" style="width:4.5rem" aria-label="Cantidad de ${esc(pr.nombre)}">
                 </label>`).join('')}
               <div class="fila" style="margin-top:.5rem">
                 <button class="btn" type="submit">${esc(t('reservar', 'Reservar'))}</button>
-                <a class="btn sec" href="https://www.google.com/maps/dir/?api=1&destination=${f.lat},${f.lng}" target="_blank" rel="noopener">🗺️ ${esc(t('como_llegar', 'Cómo llegar'))}</a>
+                <a class="btn sec" href="https://www.google.com/maps/dir/?api=1&destination=${esc(f.lat)},${f.lng}" target="_blank" rel="noopener noreferrer">🗺️ ${esc(t('como_llegar', 'Cómo llegar'))}</a>
               </div>
             </form>
           </article>`).join('') || '<p>Ninguna finca tiene venta directa activa.</p>'}
@@ -44,7 +44,7 @@ export default {
   activar(raiz, repintar) {
     raiz.querySelectorAll('form[data-finca]').forEach(form => form.onsubmit = async (e) => {
       e.preventDefault();
-      const items = [...new FormData(form)].map(([productoId, cantidad]) => ({ productoId, cantidad: Number(cantidad) })).filter(i => i.cantidad > 0);
+      const items = [...new FormData(form)].map(([productoId, cantidad]) => ({ productoId, cantidad: Math.floor(Number(cantidad)) })).filter(i => Number.isFinite(i.cantidad) && i.cantidad > 0 && i.cantidad <= 1000);
       if (!items.length) return aviso('Elige al menos un producto');
       const r = await reservarCompra(form.dataset.finca, items);
       aviso(r.ok ? `✔ Reserva ${r.codigo} · ${euros(r.total)} · ${r.recogida}` : '⚠️ ' + (r.error || 'No se pudo reservar'));

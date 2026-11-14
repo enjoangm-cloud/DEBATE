@@ -1,6 +1,6 @@
 // Arranque de la app: idioma, tamaño de texto y navegación entre pantallas
 import { HOY, getIdiomas, getTextos } from '../../backend/api.js';
-import { estado, fechaLarga } from './util.js';
+import { estado, fechaLarga, esc } from './util.js';
 import inicio from './pantallas/inicio.js';
 import calendario from './pantallas/calendario.js';
 import mapa from './pantallas/mapa.js';
@@ -18,6 +18,7 @@ const guardar = (k, v) => { try { localStorage.setItem(k, v); } catch { /* sin a
 
 // --- Tamaño del texto (A− / A+) ---
 let tam = Number(leer('tam', 18));
+if (!Number.isFinite(tam) || tam < 14 || tam > 30) tam = 18; // ignora valores manipulados
 const aplicarTam = () => { document.documentElement.style.setProperty('--tam', tam + 'px'); guardar('tam', tam); };
 document.getElementById('txt-menos').onclick = () => { tam = Math.max(14, tam - 2); aplicarTam(); };
 document.getElementById('txt-mas').onclick = () => { tam = Math.min(30, tam + 2); aplicarTam(); };
@@ -27,6 +28,7 @@ aplicarTam();
 const selIdioma = document.getElementById('sel-idioma');
 let idiomas = [];
 async function cambiarIdioma(codigo) {
+  if (!idiomas.some(i => i.codigo === codigo)) codigo = 'es'; // solo idiomas de la lista
   estado.idioma = codigo;
   estado.textos = await getTextos(codigo);
   const info = idiomas.find(i => i.codigo === codigo);
@@ -46,7 +48,7 @@ selIdioma.onchange = () => cambiarIdioma(selIdioma.value);
 let pintando = 0;
 async function pintar() {
   const nombre = (location.hash.slice(1) || 'inicio');
-  const pantalla = PANTALLAS[nombre] || inicio;
+  const pantalla = Object.hasOwn(PANTALLAS, nombre) ? PANTALLAS[nombre] : inicio; // nunca usa nombres desconocidos
   document.querySelectorAll('#nav a').forEach(a => a.classList.toggle('activo', a.getAttribute('href') === '#' + nombre));
   const turno = ++pintando;
   vista.innerHTML = '<p class="cargando">Cargando…</p>';
@@ -57,7 +59,7 @@ async function pintar() {
     await pantalla.activar?.(vista, pintar); // eventos de la pantalla
   } catch (e) {
     console.error(e);
-    vista.innerHTML = `<div class="tarjeta">⚠️ Error al cargar esta pantalla: ${e.message}</div>`;
+    vista.innerHTML = `<div class="tarjeta">⚠️ Error al cargar esta pantalla: ${esc(e.message)}</div>`;
   }
 }
 window.addEventListener('hashchange', () => { pintar(); vista.focus(); });
@@ -66,7 +68,7 @@ window.addEventListener('hashchange', () => { pintar(); vista.focus(); });
 (async () => {
   document.getElementById('fecha-hoy').textContent = fechaLarga(HOY);
   idiomas = await getIdiomas();
-  selIdioma.innerHTML = idiomas.map(i => `<option value="${i.codigo}">${i.nombre}</option>`).join('');
+  selIdioma.innerHTML = idiomas.map(i => `<option value="${esc(i.codigo)}">${esc(i.nombre)}</option>`).join('');
   const inicial = leer('idioma', 'es');
   selIdioma.value = idiomas.some(i => i.codigo === inicial) ? inicial : 'es';
   await cambiarIdioma(selIdioma.value);

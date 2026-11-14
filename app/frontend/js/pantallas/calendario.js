@@ -16,7 +16,8 @@ const ESTADO = { en_curso: ['en_curso', 'En curso', ''], terminado: ['terminado'
 export default {
   async html() {
     const [p, cal, prev, alertas] = await Promise.all([getPueblo(), getCalendario(), getPrevision(), getAlertas()]);
-    const color = (id) => p.cultivos.find(c => c.id === id)?.color || '#3f6b2a';
+    // Solo se aceptan colores hexadecimales (evita inyectar CSS)
+    const color = (id) => { const c = p.cultivos.find(x => x.id === id)?.color; return /^#[0-9a-f]{3,8}$/i.test(c) ? c : '#3f6b2a'; };
     const emoji = (id) => p.cultivos.find(c => c.id === id)?.emoji || '🌱';
 
     return `
@@ -42,8 +43,8 @@ export default {
           const [k, txt, cls] = ESTADO[c.estado] || ESTADO.proximo;
           const pct = Math.round(100 * c.trabajadoresConfirmados / Math.max(1, c.trabajadoresNecesarios));
           return `
-          <div class="tarjeta ${c.estado === 'en_curso' ? 'destacada' : ''}">
-            <h3>${emoji(c.cultivoId)} ${esc(c.nombre)} <span class="etiqueta ${cls}">${esc(t(k, txt))}</span></h3>
+          <div class="tarjeta ${esc(c.estado === 'en_curso' ? 'destacada' : '')}">
+            <h3>${emoji(c.cultivoId)} ${esc(c.nombre)} <span class="etiqueta ${esc(cls)}">${esc(t(k, txt))}</span></h3>
             <p>${fechaCorta(c.inicio)} → ${fechaCorta(c.fin)}</p>
             <p><strong>${c.trabajadoresConfirmados}</strong> de ${c.trabajadoresNecesarios} personas</p>
             <div class="barra"><span style="width:${Math.min(100, pct)}%"></span></div>
@@ -56,13 +57,13 @@ export default {
       <p class="muted">Verde = se puede recoger. Rojo = mejor parar (lluvia o viento fuerte).</p>
       <div class="dias">
         ${prev.map(d => `
-          <div class="dia ${d.aptoCosecha ? 'apto' : 'noapto'}">
+          <div class="dia ${esc(d.aptoCosecha ? 'apto' : 'noapto')}">
             <div><strong>${d.fecha === HOY ? esc(t('hoy', 'Hoy')) : diaSemana(d.fecha)}</strong></div>
             <div class="muted">${fechaCorta(d.fecha)}</div>
             <div class="ico">${ICONO_CIELO[d.cielo] || '🌤️'}</div>
             <div><strong>${d.tMax}°</strong> / ${d.tMin}°</div>
             <div class="muted">💧 ${d.lluviaProb} % · 💨 ${d.vientoKmh}</div>
-            <div class="etiqueta ${d.aptoCosecha ? '' : 'rojo'}">${d.aptoCosecha ? esc(t('apto', 'Apto')) : esc(t('no_apto', 'No apto'))}</div>
+            <div class="etiqueta ${esc(d.aptoCosecha ? '' : 'rojo')}">${d.aptoCosecha ? esc(t('apto', 'Apto')) : esc(t('no_apto', 'No apto'))}</div>
           </div>`).join('')}
       </div>
       ${fuente('getPrevision')}
@@ -70,7 +71,7 @@ export default {
       <h2 class="seccion">⚠️ Avisos</h2>
       <div class="rejilla">
         ${alertas.map(a => `
-          <div class="tarjeta alerta ${a.nivel}">
+          <div class="tarjeta alerta ${esc(a.nivel)}">
             <h3>${esc(diaSemana(a.fecha))} ${fechaCorta(a.fecha)} · ${esc(a.tipo)}</h3>
             <p class="muted">Dato: ${esc(a.datoTecnico)}</p>
             <div class="ia">${esc(a.mensajeSencillo)}</div>

@@ -18,7 +18,7 @@ export default {
       <div class="tarjeta fila" style="margin-bottom:1rem">
         <label>Demo · soy:
           <select id="sel-temporero">
-            ${temporeros.map(x => `<option value="${x.id}" ${x.id === temporeroActual ? 'selected' : ''}>${esc(x.nombre)} (${esc(x.origen)})</option>`).join('')}
+            ${temporeros.map(x => `<option value="${esc(x.id)}" ${x.id === temporeroActual ? 'selected' : ''}>${esc(x.nombre)} (${esc(x.origen)})</option>`).join('')}
           </select>
         </label>
         ${yo ? `<span class="muted">Idiomas: ${yo.idiomas.join(', ')} · Experiencia: ${yo.experiencia.map(id => cultivo(id)?.emoji || id).join(' ')}
@@ -34,7 +34,7 @@ export default {
           const libres = o.plazas - o.plazasCubiertas;
           const c = cultivo(o.cultivoId);
           return `
-          <article class="tarjeta ${libres > 0 ? 'destacada' : ''}">
+          <article class="tarjeta ${esc(libres > 0 ? 'destacada' : '')}">
             <h3>${c?.emoji || ''} ${esc(o.titulo)}</h3>
             <p><strong>${esc(f.nombre || '')}</strong>${f.campanaDigna ? ' <span class="etiqueta">✅ Campaña digna</span>' : ''}</p>
             <p>📅 ${fechaCorta(o.inicio)} → ${fechaCorta(o.fin)} · 🕐 ${esc(t('horario', 'Horario'))}: ${esc(o.horario)}</p>
@@ -49,7 +49,7 @@ export default {
             <p class="muted">${esc(o.tareas || '')} · Encargado habla: ${(o.idiomasEncargado || []).join(', ')}</p>
             <p><strong>${libres}</strong> ${esc(t('plazas_libres', 'plazas libres'))} de ${o.plazas}</p>
             <div class="fila">
-              <button class="btn" data-oferta="${o.id}" ${libres <= 0 || yaPedida(o.id) ? 'disabled' : ''}>
+              <button class="btn" data-oferta="${esc(o.id)}" ${libres <= 0 || yaPedida(o.id) ? 'disabled' : ''}>
                 ${yaPedida(o.id) ? '✔ ' + esc(t('solicitado', 'Solicitado')) : esc(t('solicitar', 'Solicitar'))}</button>
               ${f.telefono ? `<a class="btn sec" href="tel:${esc(f.telefono)}">📞 ${esc(t('llamar', 'Llamar'))}</a>` : ''}
               <a class="btn sec" href="#mapa">🗺️ ${esc(t('como_llegar', 'Cómo llegar'))}</a>

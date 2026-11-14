@@ -5,8 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>DEBATE · Campaña de cosecha en Vila-rodona (demo)</title>
   <meta name="description" content="Prototipo: organizar la campaña de cosecha en un pueblo de menos de 5.000 habitantes con Google Maps, Business Profile, Weather y Vertex AI.">
-  <!-- Mapa del prototipo: Leaflet + OpenStreetMap (sin clave). En producción: Google Maps JavaScript API -->
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <!-- Todo se sirve desde nuestro dominio (sin CDNs): Leaflet y la fuente están en frontend/vendor/.
+       Mapa del prototipo: Leaflet + OpenStreetMap. En producción: Google Maps JavaScript API. -->
+  <link rel="stylesheet" href="frontend/vendor/leaflet/leaflet.css">
+  <link rel="stylesheet" href="frontend/css/fuentes.css">
   <link rel="stylesheet" href="frontend/css/styles.css">
 </head>
 <body>
@@ -49,7 +52,7 @@
     Prototipo de concurso · Datos ficticios marcados “(ejemplo)” · En producción: Google Maps, Business Profile, Weather API y Vertex AI.
   </footer>
 
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="frontend/vendor/leaflet/leaflet.js"></script>
   <script type="module" src="frontend/js/main.js"></script>
 </body>
 </html>

@@ -27,10 +27,11 @@ También rellenamos un **Business Model Canvas** (ver `docs/idea.md`).
 app/                 ← lo que publica Vercel (vercel.json → outputDirectory: app)
   index.html
   frontend/css, frontend/js/main.js, frontend/js/pantallas/*.js
+  frontend/vendor/   ← Leaflet y fuente Atkinson Hyperlegible alojados aquí (sin CDNs)
   backend/api.js     ← único punto de entrada del backend simulado
   backend/services/  ← un archivo por servicio de Google simulado
   backend/data/      ← datos de ejemplo (módulos ES, no JSON)
-docs/                ← idea, canvas, contrato frontend↔backend
+docs/                ← idea, canvas, contrato frontend↔backend, seguridad
 scripts/             ← pruebas en Node (node scripts/probar-backend.mjs)
 ```
 Sin build ni dependencias. Probar en local: `cd app && python3 -m http.server 8000`.
@@ -40,3 +41,8 @@ Sin build ni dependencias. Probar en local: `cd app && python3 -m http.server 80
 - Respuestas al equipo: castellano, frases cortas, concretas, fáciles de copiar en papel.
 - Dudas → preguntas de opción múltiple.
 - Texto grande y controles A−/A+ en la interfaz (preferencia del equipo).
+
+## Seguridad (no romper)
+- Nada de scripts inline ni CDNs: la CSP de `vercel.json` los bloquea.
+- Escapar con `esc()` todo dato que entre en HTML.
+- Ninguna clave de API en el código. Ver `docs/seguridad.md`.

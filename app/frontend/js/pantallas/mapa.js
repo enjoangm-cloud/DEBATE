@@ -17,7 +17,7 @@ function popup(l) {
   if (l.tipo === 'recogida') extra = `<br>🚐 Salida: <strong>${esc(l.hora || '')}</strong>`;
   const ir = `https://www.google.com/maps/dir/?api=1&destination=${l.lat},${l.lng}`;
   return `<strong>${ICONO_LUGAR[l.tipo] || '📍'} ${esc(l.nombre)}</strong><br>${esc(l.descripcion || '')}${extra}
-    <br><a href="${ir}" target="_blank" rel="noopener">${esc(t('como_llegar', 'Cómo llegar'))} ↗</a>`;
+    <br><a href="${esc(ir)}" target="_blank" rel="noopener noreferrer">${esc(t('como_llegar', 'Cómo llegar'))} ↗</a>`;
 }
 
 export default {
@@ -26,7 +26,7 @@ export default {
       <h2>🗺️ ${esc(t('nav_mapa', 'Mapa del pueblo'))}</h2>
       <p class="muted">Todo lo que necesita un temporero al llegar, en un mapa. Toca un punto para ver detalles.</p>
       <div class="filtros" id="filtros">
-        ${TIPOS.map(([k, n]) => `<label><input type="checkbox" value="${k}" checked> ${ICONO_LUGAR[k]} ${n}</label>`).join('')}
+        ${TIPOS.map(([k, n]) => `<label><input type="checkbox" value="${esc(k)}" checked> ${ICONO_LUGAR[k]} ${n}</label>`).join('')}
         <label><input type="checkbox" value="rutas" checked> 〰️ Rutas</label>
       </div>
       <div id="mapa-leaflet" role="region" aria-label="Mapa de Vila-rodona"></div>
@@ -40,7 +40,7 @@ export default {
 
     if (mapa) { mapa.remove(); mapa = null; }
     mapa = L.map('mapa-leaflet').setView([p.lat, p.lng], p.zoom || 14);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 19, attribution: '© OpenStreetMap · prototipo (producción: Google Maps)',
     }).addTo(mapa);
 
@@ -53,7 +53,7 @@ export default {
     }
     capas.rutas = L.layerGroup().addTo(mapa);
     for (const r of rutas) {
-      L.polyline(r.puntos, { color: r.color || '#1f5c99', weight: 5, opacity: .8, dashArray: r.tipo === 'cosechas' ? '8 8' : null })
+      L.polyline(r.puntos, { color: /^#[0-9a-f]{3,8}$/i.test(r.color) ? r.color : '#1f5c99', weight: 5, opacity: .8, dashArray: r.tipo === 'cosechas' ? '8 8' : null })
         .bindPopup(`<strong>${esc(r.nombre)}</strong><br>${esc(r.descripcion)}`).addTo(capas.rutas);
     }
 
@@ -64,7 +64,7 @@ export default {
     });
 
     raiz.querySelector('#lista-rutas').innerHTML = rutas.map(r => `
-      <div class="tarjeta"><h3><span style="color:${r.color}">〰️</span> ${esc(r.nombre)}</h3>
+      <div class="tarjeta"><h3><span style="color:${esc(r.color)}">〰️</span> ${esc(r.nombre)}</h3>
       <span class="etiqueta">${esc(r.tipo)}</span><p>${esc(r.descripcion)}</p></div>`).join('');
 
     setTimeout(() => mapa?.invalidateSize(), 100);

@@ -28,7 +28,7 @@ export default {
       <p class="muted">La IA sugiere temporero + oferta + cama. <strong>Tú apruebas o rechazas.</strong></p>
       <div class="rejilla">
         ${emp.map(e => `
-          <div class="tarjeta ${e.estado === 'propuesto' ? 'destacada' : ''}">
+          <div class="tarjeta ${esc(e.estado === 'propuesto' ? 'destacada' : '')}">
             <h3>${esc(nombreT(e.temporeroId))}</h3>
             <p>→ ${esc(tituloO(e.ofertaId))}<br><span class="muted">${esc(finca(e.ofertaId))}</span></p>
             ${e.alojamientoId ? `<p>🛏️ ${esc(porId(lugares, e.alojamientoId)?.nombre || '')}</p>` : ''}
@@ -36,9 +36,9 @@ export default {
             <p class="muted">Confianza: ${Math.round(e.confianza * 100)} %</p>
             ${e.estado === 'propuesto' ? `
               <div class="fila">
-                <button class="btn" data-emp="${e.id}" data-dec="aprobado">✔ ${esc(t('aprobar', 'Aprobar'))}</button>
-                <button class="btn sec" data-emp="${e.id}" data-dec="rechazado">✖ ${esc(t('rechazar', 'Rechazar'))}</button>
-              </div>` : `<span class="etiqueta ${e.estado === 'aprobado' ? '' : 'gris'}">${e.estado === 'aprobado' ? '✔ Aprobado' : '✖ Rechazado'}</span>`}
+                <button class="btn" data-emp="${esc(e.id)}" data-dec="aprobado">✔ ${esc(t('aprobar', 'Aprobar'))}</button>
+                <button class="btn sec" data-emp="${esc(e.id)}" data-dec="rechazado">✖ ${esc(t('rechazar', 'Rechazar'))}</button>
+              </div>` : `<span class="etiqueta ${esc(e.estado === 'aprobado' ? '' : 'gris')}">${e.estado === 'aprobado' ? '✔ Aprobado' : '✖ Rechazado'}</span>`}
           </div>`).join('')}
       </div>
       ${fuente('getEmparejamientosIA')}
@@ -69,7 +69,7 @@ export default {
 
   activar(raiz, repintar) {
     raiz.querySelectorAll('[data-emp]').forEach(b => b.onclick = async () => {
-      raiz.querySelectorAll(`[data-emp="${b.dataset.emp}"]`).forEach(x => x.disabled = true);
+      raiz.querySelectorAll(`[data-emp="${esc(b.dataset.emp)}"]`).forEach(x => x.disabled = true);
       const r = await decidirEmparejamiento(b.dataset.emp, b.dataset.dec);
       aviso(r.ok ? (b.dataset.dec === 'aprobado' ? '✔ Aprobado: se reserva la cama y se avisa a la finca' : 'Propuesta rechazada') : '⚠️ No se pudo guardar');
       repintar();
